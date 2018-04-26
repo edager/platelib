@@ -1,0 +1,20 @@
+\indexentry{platelib.fitfun (module)|hyperpage}{9}
+\indexentry{exp\_rise() (in module platelib.fitfun)|hyperpage}{9}
+\indexentry{fit\_plate (class in platelib.fitfun)|hyperpage}{9}
+\indexentry{gauss() (in module platelib.fitfun)|hyperpage}{9}
+\indexentry{gauss\_dataset() (in module platelib.fitfun)|hyperpage}{9}
+\indexentry{linear() (in module platelib.fitfun)|hyperpage}{9}
+\indexentry{objective() (in module platelib.fitfun)|hyperpage}{9}
+\indexentry{quadratic() (in module platelib.fitfun)|hyperpage}{9}
+\indexentry{sigmoidal\_auto() (in module platelib.fitfun)|hyperpage}{9}
+\indexentry{platelib.plateread (module)|hyperpage}{9}
+\indexentry{Plate\_data (class in platelib.plateread)|hyperpage}{9}
+\indexentry{plot\_data() (platelib.plateread.Plate\_data method)|hyperpage}{9}
+\indexentry{to\_a\_csv() (platelib.plateread.Plate\_data method)|hyperpage}{9}
+\indexentry{to\_a\_dataframe() (platelib.plateread.Plate\_data method)|hyperpage}{10}
+\indexentry{read\_plate() (in module platelib.plateread)|hyperpage}{10}
+\indexentry{read\_tecan() (in module platelib.plateread)|hyperpage}{10}
+\indexentry{read\_transposed\_bmg() (in module platelib.plateread)|hyperpage}{10}
+\indexentry{read\_untransposed\_bmg() (in module platelib.plateread)|hyperpage}{10}
+\indexentry{vert\_order() (in module platelib.plateread)|hyperpage}{10}
+\indexentry{platelib (module)|hyperpage}{10}

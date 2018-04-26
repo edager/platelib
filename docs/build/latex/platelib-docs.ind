@@ -1,0 +1,56 @@
+\begin{sphinxtheindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter E
+  \item exp\_rise() (in module platelib.fitfun), \hyperpage{9}
+
+  \indexspace
+  \bigletter F
+  \item fit\_plate (class in platelib.fitfun), \hyperpage{9}
+
+  \indexspace
+  \bigletter G
+  \item gauss() (in module platelib.fitfun), \hyperpage{9}
+  \item gauss\_dataset() (in module platelib.fitfun), \hyperpage{9}
+
+  \indexspace
+  \bigletter L
+  \item linear() (in module platelib.fitfun), \hyperpage{9}
+
+  \indexspace
+  \bigletter O
+  \item objective() (in module platelib.fitfun), \hyperpage{9}
+
+  \indexspace
+  \bigletter P
+  \item Plate\_data (class in platelib.plateread), \hyperpage{9}
+  \item platelib (module), \hyperpage{10}
+  \item platelib.fitfun (module), \hyperpage{9}
+  \item platelib.plateread (module), \hyperpage{9}
+  \item plot\_data() (platelib.plateread.Plate\_data method), \hyperpage{9}
+
+  \indexspace
+  \bigletter Q
+  \item quadratic() (in module platelib.fitfun), \hyperpage{9}
+
+  \indexspace
+  \bigletter R
+  \item read\_plate() (in module platelib.plateread), \hyperpage{10}
+  \item read\_tecan() (in module platelib.plateread), \hyperpage{10}
+  \item read\_transposed\_bmg() (in module platelib.plateread), \hyperpage{10}
+  \item read\_untransposed\_bmg() (in module platelib.plateread), \hyperpage{10}
+
+  \indexspace
+  \bigletter S
+  \item sigmoidal\_auto() (in module platelib.fitfun), \hyperpage{9}
+
+  \indexspace
+  \bigletter T
+  \item to\_a\_csv() (platelib.plateread.Plate\_data method), \hyperpage{9}
+  \item to\_a\_dataframe() (platelib.plateread.Plate\_data method), \hyperpage{10}
+
+  \indexspace
+  \bigletter V
+  \item vert\_order() (in module platelib.plateread), \hyperpage{10}
+
+\end{sphinxtheindex}

@@ -1,0 +1,178 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Cookbook &#8212; platelib-docs 0.1.2-alpha documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="platelib" href="modules.html" />
+    <link rel="prev" title="Support" href="support.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cookbook">
+<h1>Cookbook<a class="headerlink" href="#cookbook" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="reading-in-data">
+<h2>Reading in data<a class="headerlink" href="#reading-in-data" title="Permalink to this headline">¶</a></h2>
+<p>The main functionality of <code class="docutils literal notranslate"><span class="pre">platelib</span></code> is the <code class="docutils literal notranslate"><span class="pre">read_plate</span></code> function
+that allows for reading in platereader data from kinetic experiments
+into a common framework namely into the <code class="docutils literal notranslate"><span class="pre">Plate_data</span></code> class.</p>
+<p>It can be specified how many replicates per sample were prepared
+(default is <code class="docutils literal notranslate"><span class="pre">3</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">read_plate</span><span class="p">(</span><span class="s1">&#39;path/to/file&#39;</span><span class="p">,</span> <span class="n">replicates</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>NOTE that the number of replicates have to be the same for all samples!</strong></p>
+<p>It can be specified which direction the replicates were loaded
+onto the plate where <code class="docutils literal notranslate"><span class="pre">'hori'</span></code> (horizontal) means towards
+increasing numbers and <code class="docutils literal notranslate"><span class="pre">'vert'</span></code> is towards increasing letters
+(default is <code class="docutils literal notranslate"><span class="pre">'hori'</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">read_plate</span><span class="p">(</span><span class="s1">&#39;path/to/file&#39;</span><span class="p">,</span> <span class="n">rep_direction</span><span class="o">=</span><span class="s1">&#39;vert&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>NOTE that the replicates have to be next to each other!</strong></p>
+<p>Data from Tecan platereaders can be read in as (default is <code class="docutils literal notranslate"><span class="pre">'bmg'</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">read_plate</span><span class="p">(</span><span class="s1">&#39;path/to/file&#39;</span><span class="p">,</span> <span class="n">platereader</span><span class="o">=</span><span class="s1">&#39;tecan&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>NOTE that this functionality has not been fully tested yet!</strong></p>
+<p>As well as from BMG platereaders either where the data has prior
+been transposed <code class="docutils literal notranslate"><span class="pre">True</span></code> such that well data are in column format
+or in row format <code class="docutils literal notranslate"><span class="pre">False</span></code> (default is <code class="docutils literal notranslate"><span class="pre">True</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">read_plate</span><span class="p">(</span><span class="s1">&#39;path/to/file&#39;</span><span class="p">,</span> <span class="n">transposed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The time unit can also be specified which as either <code class="docutils literal notranslate"><span class="pre">'seconds'</span></code>, <code class="docutils literal notranslate"><span class="pre">'minutes'</span></code>, <code class="docutils literal notranslate"><span class="pre">'hours'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'days'</span></code> will carry along into indexes
+if exported and to unit of x-axis if plotted (default is <code class="docutils literal notranslate"><span class="pre">'hours'</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">read_plate</span><span class="p">(</span><span class="s1">&#39;path/to/file&#39;</span><span class="p">,</span><span class="n">time_unit</span><span class="o">=</span><span class="s1">&#39;days&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="accessing-data">
+<h2>Accessing data<a class="headerlink" href="#accessing-data" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Plate_data</span></code> class allows for different ways of accessing the data</p>
+<p>Through index:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Through index slice:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">[::</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Through well name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;B02&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Through list of well names:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">[[</span><span class="s1">&#39;B02&#39;</span><span class="p">,</span><span class="s1">&#39;C03&#39;</span><span class="p">,</span><span class="s1">&#39;D04&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Retrieved as a pandas.DataFrame with wellnames as column names and
+time points as index:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">Plate_data</span><span class="o">.</span><span class="n">to_a_dataframe</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Or as a (C)omma (S)eperated (V)aribles file with the first line
+being (time unit + ) well names and the first column are the
+time points:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Plate_data</span><span class="o">.</span><span class="n">to_a_csv</span><span class="p">(</span><span class="s1">&#39;path/to/file.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plotting-data">
+<h2>Plotting data<a class="headerlink" href="#plotting-data" title="Permalink to this headline">¶</a></h2>
+<p>The data is plotted according to replicates, and subtitles can be added (default is <cite>None</cite>),
+and it can be specified whether all plots should have the same y-axis (default is <cite>True</cite>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">titles</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;condition 1&#39;</span><span class="p">,</span> <span class="s1">&#39;conditions 2&#39;</span><span class="p">],</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Will make the number of samples plots, all replicates of a given condition in the given plot.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cookbook</a><ul>
+<li><a class="reference internal" href="#reading-in-data">Reading in data</a></li>
+<li><a class="reference internal" href="#accessing-data">Accessing data</a></li>
+<li><a class="reference internal" href="#plotting-data">Plotting data</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="support.html" title="previous chapter">Support</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">platelib</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cookbook.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Emil Dandanell Agerschou.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/cookbook.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

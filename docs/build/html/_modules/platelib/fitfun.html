@@ -1,0 +1,174 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>platelib.fitfun &#8212; platelib-docs 0.1.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for platelib.fitfun</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">plateread</span> <span class="k">import</span> <span class="n">Plate_data</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="exp_rise"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.exp_rise">[docs]</a><span class="k">def</span> <span class="nf">exp_rise</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">k</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="linear"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.linear">[docs]</a><span class="k">def</span> <span class="nf">linear</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">t</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span></div>
+
+<div class="viewcode-block" id="quadratic"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.quadratic">[docs]</a><span class="k">def</span> <span class="nf">quadratic</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">t</span><span class="o">+</span><span class="n">c</span></div>
+
+<div class="viewcode-block" id="sigmoidal_auto"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.sigmoidal_auto">[docs]</a><span class="k">def</span> <span class="nf">sigmoidal_auto</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">k</span><span class="p">):</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span><span class="o">/</span><span class="p">(</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="n">t</span><span class="p">))</span></div>
+
+
+<span class="c1"># TODO: </span>
+<span class="c1"># 1. Fit all wells in a plate_data instance locally </span>
+<span class="c1"># 2. Fit all wells in a plate_data instance globally in group</span>
+<span class="c1"># 3. Fit all groups globally</span>
+<span class="c1"># 4. Plots with the associated fits</span>
+<span class="c1"># 5. Report on fitting quality        </span>
+<span class="c1"># Note that the actually fitting function could be done in Cython         </span>
+    
+<div class="viewcode-block" id="fit_plate"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.fit_plate">[docs]</a><span class="k">class</span> <span class="nc">fit_plate</span><span class="p">(</span><span class="n">Plate_data</span><span class="p">):</span>
+    <span class="k">pass</span>  </div>
+
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">lmfit</span> <span class="k">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">report_fit</span>
+
+<div class="viewcode-block" id="gauss"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.gauss">[docs]</a><span class="k">def</span> <span class="nf">gauss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">cen</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
+    <span class="s2">&quot;basic gaussian&quot;</span>
+    <span class="k">return</span> <span class="n">amp</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">cen</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="gauss_dataset"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.gauss_dataset">[docs]</a><span class="k">def</span> <span class="nf">gauss_dataset</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;calc gaussian from params for data set i</span>
+<span class="sd">    using simple, hardwired naming convention&quot;&quot;&quot;</span>
+    <span class="n">amp</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;amp_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">cen</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;cen_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sig_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">return</span> <span class="n">gauss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">cen</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="objective"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.objective">[docs]</a><span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; calculate total residual for fits to several data sets held</span>
+<span class="sd">    in a 2-D array, and modeled by Gaussian functions&quot;&quot;&quot;</span>
+    <span class="n">ndata</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="c1"># make residual per data set</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndata</span><span class="p">):</span>
+        <span class="n">resid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">gauss_dataset</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="c1"># now flatten this to a 1D array, as minimize() needs</span>
+    <span class="k">return</span> <span class="n">resid</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
+
+<span class="c1"># create 5 datasets</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">x  = np.linspace( -1, 2, 151)</span>
+<span class="sd">data = []</span>
+<span class="sd">for i in np.arange(5):</span>
+<span class="sd">    amp   =  0.60 + 9.50*np.random.rand()</span>
+<span class="sd">    cen   = -0.20 + 1.20*np.random.rand()</span>
+<span class="sd">    sig   =  0.25 + 0.03*np.random.rand()</span>
+<span class="sd">    dat   = gauss(x, amp, cen, sig) + np.random.normal(size=len(x), scale=0.1)</span>
+<span class="sd">    data.append(dat)</span>
+
+<span class="sd"># data has shape (5, 151)</span>
+<span class="sd">data = np.array(data)</span>
+<span class="sd">assert(data.shape) == (5, 151)</span>
+
+<span class="sd"># create 5 sets of parameters, one per data set</span>
+<span class="sd">fit_params = Parameters()</span>
+<span class="sd">for iy, y in enumerate(data):</span>
+<span class="sd">    fit_params.add( &#39;amp_%i&#39; % (iy+1), value=0.5, min=0.0,  max=200)</span>
+<span class="sd">    fit_params.add( &#39;cen_%i&#39; % (iy+1), value=0.4, min=-2.0,  max=2.0)</span>
+<span class="sd">    fit_params.add( &#39;sig_%i&#39; % (iy+1), value=0.3, min=0.01, max=3.0)</span>
+
+<span class="sd"># but now constrain all values of sigma to have the same value</span>
+<span class="sd"># by assigning sig_2, sig_3, .. sig_5 to be equal to sig_1</span>
+<span class="sd">for iy in (2, 3, 4, 5):</span>
+<span class="sd">    fit_params[&#39;sig_%i&#39; % iy].expr=&#39;sig_1&#39;</span>
+
+<span class="sd"># run the global fit to all the data sets</span>
+<span class="sd">result = minimize(objective, fit_params, args=(x, data))</span>
+<span class="sd">report_fit(result.params)</span>
+
+<span class="sd"># plot the data sets and fits</span>
+<span class="sd">plt.figure()</span>
+<span class="sd">for i in range(5):</span>
+<span class="sd">    y_fit = gauss_dataset(result.params, i, x)</span>
+<span class="sd">    plt.plot(x, data[i, :], &#39;o&#39;, x, y_fit, &#39;-&#39;)</span>
+
+<span class="sd">plt.show()</span>
+<span class="sd">&#39;&#39;&#39;</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Emil Dandanell Agerschou.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

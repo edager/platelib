@@ -1,0 +1,310 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>platelib.plateread &#8212; platelib-docs 0.1.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for platelib.plateread</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python2</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">ascii_uppercase</span> <span class="k">as</span> <span class="n">A_up</span> 
+
+<span class="c1"># Read in data from a bmg or tecan platereader</span>
+   
+<span class="c1"># TODO:</span>
+<span class="c1"># 1. Extract metadata/header from data files  </span>
+
+<div class="viewcode-block" id="read_plate"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.read_plate">[docs]</a><span class="k">def</span> <span class="nf">read_plate</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">replicates</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">rep_direction</span><span class="o">=</span><span class="s1">&#39;hori&#39;</span><span class="p">,</span><span class="n">time_unit</span><span class="o">=</span><span class="s1">&#39;hours&#39;</span><span class="p">,</span> 
+               <span class="n">platereader</span><span class="o">=</span><span class="s1">&#39;bmg&#39;</span><span class="p">,</span><span class="n">transposed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Reads in data from a CSV file from a BMG or Tecan platereader and returns a platedata object.</span>
+<span class="sd">    </span>
+<span class="sd">    :param filename: Path to filename as a string</span>
+<span class="sd">    :param replicates: The number of replicates per sample, excepts a positive integer.</span>
+<span class="sd">    :param rep_direction: The directions replicates is in. Only &#39;hori&#39; and &#39;vert&#39; are accepted directions, &#39;hori&#39; if replicates are going from left to rigth &#39;vert&#39; from replicates going from top to bottom. </span>
+<span class="sd">    :param time_unit: The time unit one would like to have, accepted values are: &#39;seconds&#39;,&#39;minutes&#39;,&#39;hours&#39;,&#39;days&#39;  </span>
+<span class="sd">    :param platereader: The plate reader used to collect the data. Only &#39;bmg&#39; and &#39;tecan&#39; are accepted platereaders</span>
+<span class="sd">    :param transposed: Wether the wells are in column (True) or row format (False).   </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">Timepars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;seconds&#39;</span><span class="p">,</span><span class="s1">&#39;minutes&#39;</span><span class="p">,</span><span class="s1">&#39;hours&#39;</span><span class="p">,</span><span class="s1">&#39;days&#39;</span><span class="p">]</span>
+    <span class="n">Timefactor</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">3600.0</span><span class="p">,</span> <span class="mf">86400.0</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">time_unit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Timepars</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a supported unit&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_unit</span><span class="p">))</span> 
+    
+    <span class="k">if</span> <span class="n">rep_direction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;vert&#39;</span><span class="p">,</span><span class="s1">&#39;hori&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid direction, only &quot;vert&quot; and &quot;hori&quot; are&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rep_direction</span><span class="p">))</span> 
+    
+    <span class="k">if</span> <span class="n">platereader</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;bmg&#39;</span><span class="p">,</span><span class="s1">&#39;tecan&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; platereader format is not supported , only &quot;bmg&quot; and &quot;tecan&quot; are&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">platereader</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;.xls&#39;</span><span class="p">,</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">,</span><span class="s1">&#39;.csv&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a supported filetype, only &quot;.xls&quot;,&quot;.xlsx&quot;, and &quot;.csv&quot; are&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">platereader</span> <span class="o">==</span> <span class="s1">&#39;bmg&#39;</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">transposed</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">read_transposed_bmg</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">read_untransposed_bmg</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    
+    <span class="k">else</span><span class="p">:</span>   
+        <span class="n">df</span> <span class="o">=</span> <span class="n">read_tecan</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">Timepars</span><span class="p">,</span><span class="n">Timefactor</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time_unit</span> <span class="o">==</span> <span class="n">a</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">/</span><span class="n">b</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">a</span>
+    
+    <span class="k">return</span> <span class="n">Plate_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">replicates</span><span class="p">,</span> <span class="n">rep_direction</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="read_transposed_bmg"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.read_transposed_bmg">[docs]</a><span class="k">def</span> <span class="nf">read_transposed_bmg</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Reads in transposed data from a BMG platereader and returns a pandas DataFrame object.</span>
+<span class="sd">    </span>
+<span class="sd">    :param filename: Path to filename as a string   </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;.xls&#39;</span><span class="p">,</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">)):</span>    
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span>
+                          <span class="n">index_col</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                          <span class="n">skiprows</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span>
+                          <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                          <span class="n">skiprows</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span><span class="n">engine</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">)</span>
+            
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Well&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+        
+<div class="viewcode-block" id="read_untransposed_bmg"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.read_untransposed_bmg">[docs]</a><span class="k">def</span> <span class="nf">read_untransposed_bmg</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>        
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Reads in untransposed data from a BMG platereader and returns a pandas DataFrame object.</span>
+<span class="sd">    </span>
+<span class="sd">    :param filename: Path to filename as a string   </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;.xls&#39;</span><span class="p">,</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">)):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">engine</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">)</span>
+     
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>    
+    <span class="k">return</span> <span class="n">df</span></div>
+
+<div class="viewcode-block" id="read_tecan"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.read_tecan">[docs]</a><span class="k">def</span> <span class="nf">read_tecan</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Reads in untransposed data from a tecan platereader and returns a pandas DataFrame object.</span>
+<span class="sd">    </span>
+<span class="sd">    :param filename: Path to filename as a string   </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+     
+    <span class="n">d</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">62</span><span class="p">),</span> <span class="n">skipfooter</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> 
+    <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">==</span> <span class="sa">u</span><span class="s1">&#39;Temp. [</span><span class="se">\xb0</span><span class="s1">C]&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">l</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="n">l</span><span class="o">-</span><span class="mi">4</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;any&#39;</span><span class="p">)</span>
+       
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                      <span class="n">index</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                      <span class="n">columns</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> 
+    <span class="k">return</span> <span class="n">df</span></div>
+
+<span class="c1"># TODO:</span>
+<span class="c1"># There must be a cleaner way to reorder the columns </span>
+<div class="viewcode-block" id="vert_order"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.vert_order">[docs]</a><span class="k">def</span> <span class="nf">vert_order</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span><span class="n">reps</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Helper function to reorder data if vertical replicates were made.</span>
+<span class="sd">    </span>
+<span class="sd">    :param cols: List-like object of columns names (wells) all assumed to have the form &#39;A12&#39;.</span>
+<span class="sd">    :param reps: Oositive integer number of replicates.  </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">new_col_order</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+        <span class="c1"># well already there ?</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_col_order</span><span class="p">:</span>
+            <span class="c1"># appends the well and the replicate number of the wells below it </span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="n">b</span><span class="o">+</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">A_up</span><span class="p">[</span><span class="n">A_up</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span><span class="n">A_up</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="n">reps</span><span class="p">]]:</span>
+                <span class="n">new_col_order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_col_order</span>             </div>
+
+<span class="c1"># TODO:</span>
+<span class="c1"># 1. use pandas multiindexing to store the replicates in groups </span>
+    <span class="c1"># df.loc[:, pd.IndexSlice[:, [&#39;0A&#39;,&#39;3B&#39;]]]</span>
+<div class="viewcode-block" id="Plate_data"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.Plate_data">[docs]</a><span class="k">class</span> <span class="nc">Plate_data</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Class for containing data from a platereader assay. </span>
+<span class="sd"> 	</span>
+<span class="sd">	:param data: A pandas DataFrame with time points as index and wells as columns</span>
+<span class="sd">	:param replicates: Positive integer of replicates, assuming equal number of replicates of all samples     </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">replicates</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">rep_direction</span><span class="o">=</span><span class="s1">&#39;hori&#39;</span><span class="p">):</span>
+           
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rep</span> <span class="o">=</span> <span class="n">replicates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rep_dir</span> <span class="o">=</span> <span class="n">rep_direction</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rep_dir</span> <span class="o">==</span> <span class="s1">&#39;vert&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">vert_order</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">rep</span><span class="p">)]</span>            
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">wells</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+        
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+
+        <span class="c1"># Access self.data by (integer) index of column    </span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">key</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span><span class="n">key</span><span class="o">.</span><span class="n">step</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">key</span><span class="p">]</span>
+        
+        <span class="c1"># Access self.data by name of column</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">key</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">key</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">key</span><span class="p">]</span>
+     
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="s2">&quot;Invalid argument type.&quot;</span>
+    
+    <span class="c1"># returns the number of columns i.e. samples        </span>
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wells</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Plate_data.to_a_dataframe"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.Plate_data.to_a_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">to_a_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns the data as a pandas dataframe with times as indexes 				</span>
+<span class="sd">        &#39;&#39;&#39;</span>		
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span></div>
+    
+<div class="viewcode-block" id="Plate_data.to_a_csv"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.Plate_data.to_a_csv">[docs]</a>    <span class="k">def</span> <span class="nf">to_a_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns the data as a pandas dataframe with times as indexes 				</span>
+<span class="sd">        </span>
+<span class="sd">        :param path: path to store output at</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> </div>
+    
+<div class="viewcode-block" id="Plate_data.plot_data"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.Plate_data.plot_data">[docs]</a>    <span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">titles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Plots the number the number of sample i.e. replicates/wells in the data </span>
+<span class="sd">        set. </span>
+<span class="sd">        </span>
+<span class="sd">        :param titles: List-like object of subtitles </span>
+<span class="sd">        :param sharey: Boolean, default is True, where the y-axis limits are identical. If False y-axis limits are given by matplotlib defaults.     </span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+        <span class="k">if</span> <span class="n">titles</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wells</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rep</span><span class="p">))))</span>
+        
+        
+        <span class="n">nplots</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rep</span><span class="p">))</span> 
+        <span class="n">rows</span> <span class="o">=</span>  <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">nplots</span><span class="o">/</span><span class="mf">5.0</span><span class="p">))</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="n">rows</span><span class="o">*</span><span class="mi">15</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1"># Keeping track of the biggest range on y-axis </span>
+        <span class="n">max_ylim</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10e6</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>  
+                
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nplots</span><span class="p">):</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">off_set</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rep</span>
+            <span class="n">iC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="nb">range</span><span class="p">(</span><span class="n">off_set</span><span class="p">,</span><span class="n">off_set</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">rep</span><span class="p">)]</span>
+            <span class="n">iC</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">titles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            
+            <span class="k">if</span> <span class="n">sharey</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span> 
+            
+                <span class="n">low_y</span><span class="p">,</span> <span class="n">high_y</span> <span class="o">=</span>  <span class="n">axes</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+            
+                <span class="k">if</span> <span class="n">low_y</span> <span class="o">&lt;</span> <span class="n">max_ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">high_y</span> <span class="o">&gt;</span> <span class="n">max_ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>  
+                    <span class="n">max_ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">max_ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">low_y</span><span class="p">)),</span> <span class="nb">max</span><span class="p">((</span><span class="n">max_ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">high_y</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_axes</span><span class="p">():</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">max_ylim</span><span class="p">))</span>
+            
+                <span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">max_ylim</span><span class="p">))</span>
+                
+		<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+        
+
+
+                
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Emil Dandanell Agerschou.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
