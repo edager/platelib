@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>platelib.fitfun &#8212; platelib-docs 0.1.2-alpha documentation</title>
+    <title>platelib.fitfun &#8212; platelib-docs 0.1.3-alpha documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="../../_static/documentation_options.js"></script>
@@ -31,9 +31,13 @@
           <div class="body" role="main">
             
   <h1>Source code for platelib.fitfun</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">plateread</span> <span class="k">import</span> <span class="n">Plate_data</span> 
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span> 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">plateread</span> <span class="k">import</span> <span class="n">Plate_data</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span> 
+<span class="kn">from</span> <span class="nn">lmfit</span> <span class="k">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">report_fit</span>
 
 <div class="viewcode-block" id="exp_rise"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.exp_rise">[docs]</a><span class="k">def</span> <span class="nf">exp_rise</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">k</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="n">t</span><span class="p">)</span></div>
@@ -48,6 +52,27 @@
 	<span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span><span class="o">/</span><span class="p">(</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="n">t</span><span class="p">))</span></div>
 
 
+<div class="viewcode-block" id="sigmoid"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.sigmoid">[docs]</a><span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y0</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">x_half</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">y0</span> <span class="o">+</span> <span class="p">(</span><span class="n">L</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">x_half</span><span class="p">))))</span></div>
+
+
+<div class="viewcode-block" id="fit_fun"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.fit_fun">[docs]</a><span class="k">def</span> <span class="nf">fit_fun</span><span class="p">(</span><span class="n">func</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">65</span><span class="p">])):</span>
+	
+	<span class="n">opt_para</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">std_para</span> <span class="o">=</span> <span class="p">[]</span>
+	
+	<span class="n">t</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+	
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+		<span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">sigmoid</span><span class="p">,</span>
+                               <span class="n">t</span><span class="p">,</span> 
+                               <span class="n">wt</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">,</span>
+                               <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+        <span class="n">opt_para</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">popt</span><span class="p">)</span>
+        <span class="n">std_para</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">)))</span>
+
+	<span class="k">return</span> <span class="n">opt_para</span><span class="p">,</span> <span class="n">std_para</span></div>
+
 <span class="c1"># TODO: </span>
 <span class="c1"># 1. Fit all wells in a plate_data instance locally </span>
 <span class="c1"># 2. Fit all wells in a plate_data instance globally in group</span>
@@ -58,12 +83,6 @@
     
 <div class="viewcode-block" id="fit_plate"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.fit_plate">[docs]</a><span class="k">class</span> <span class="nc">fit_plate</span><span class="p">(</span><span class="n">Plate_data</span><span class="p">):</span>
     <span class="k">pass</span>  </div>
-
-
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">lmfit</span> <span class="k">import</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">Parameters</span><span class="p">,</span> <span class="n">report_fit</span>
 
 <div class="viewcode-block" id="gauss"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.gauss">[docs]</a><span class="k">def</span> <span class="nf">gauss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">cen</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
     <span class="s2">&quot;basic gaussian&quot;</span>

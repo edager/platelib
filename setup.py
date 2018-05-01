@@ -17,7 +17,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 	long_description = f.read()
 
 setup(name='platelib',
-      version='0.1.2',
+      version='0.1.3',
       description='Common tasks for working with platereader data',
       long_description=long_description,
 	  long_description_content_type='text/markdown',
@@ -31,7 +31,8 @@ setup(name='platelib',
 		'Programming Language :: Python :: 2.7',
 		],
 	  install_requires=[
-        "numpy >= 1.10",
+		"xlrd >= 1.0",        
+		"numpy >= 1.10",
         "pandas >= 0.19.0",
         "matplotlib >= 2.0.0",
 		]

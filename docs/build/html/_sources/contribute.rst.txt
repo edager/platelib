@@ -6,7 +6,7 @@ highlighting the bug/extension/compatibilities before doing a pull request.
 
 More tools
 ---------------
-Apart from the tools listed in :ref:`Installation` the following is needeed:   
+Apart from the tools listed in :ref:`Installation` the following is needed:   
 
 	* Unix-like system
 	* `git`_
@@ -32,7 +32,7 @@ The versioning scheme of platelib should be done in reasonable
 accordance with the so called `Semantic versioning`_ where 
 X.Y.Z should be read as MAJOR.MINOR.PATCH.    
 
-The version number has to be changed in to two files ``setup.py`` and 
+The version number has to be changed in the two files ``setup.py`` and 
 ``docs/source/conf.py``
 
 .. _Semantic versioning: https://semver.org/    

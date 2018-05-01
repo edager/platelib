@@ -6,6 +6,7 @@
 
   \indexspace
   \bigletter F
+  \item fit\_fun() (in module platelib.fitfun), \hyperpage{9}
   \item fit\_plate (class in platelib.fitfun), \hyperpage{9}
 
   \indexspace
@@ -24,10 +25,10 @@
   \indexspace
   \bigletter P
   \item Plate\_data (class in platelib.plateread), \hyperpage{9}
-  \item platelib (module), \hyperpage{10}
+  \item platelib (module), \hyperpage{11}
   \item platelib.fitfun (module), \hyperpage{9}
   \item platelib.plateread (module), \hyperpage{9}
-  \item plot\_data() (platelib.plateread.Plate\_data method), \hyperpage{9}
+  \item plot() (platelib.plateread.Plate\_data method), \hyperpage{9}
 
   \indexspace
   \bigletter Q
@@ -42,11 +43,13 @@
 
   \indexspace
   \bigletter S
+  \item search\_start() (in module platelib.plateread), \hyperpage{10}
+  \item sigmoid() (in module platelib.fitfun), \hyperpage{9}
   \item sigmoidal\_auto() (in module platelib.fitfun), \hyperpage{9}
 
   \indexspace
   \bigletter T
-  \item to\_a\_csv() (platelib.plateread.Plate\_data method), \hyperpage{9}
+  \item to\_a\_csv() (platelib.plateread.Plate\_data method), \hyperpage{10}
   \item to\_a\_dataframe() (platelib.plateread.Plate\_data method), \hyperpage{10}
 
   \indexspace

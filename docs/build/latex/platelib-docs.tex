@@ -55,8 +55,8 @@
 
 
 \title{platelib Documentation}
-\date{Apr 27, 2018}
-\release{0.1.2-alpha}
+\date{May 02, 2018}
+\release{0.1.3-alpha}
 \author{Emil Dandanell Agerschou}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -186,15 +186,13 @@ The main functionality of \sphinxcode{\sphinxupquote{platelib}} is the \sphinxco
 that allows for reading in platereader data from kinetic experiments
 into a common framework namely into the \sphinxcode{\sphinxupquote{Plate\_data}} class.
 
-It can be specified how many replicates per sample were prepared
-(default is \sphinxcode{\sphinxupquote{3}}):
+If an equal number of replicates per sample were prepared
+this can be specified (default is \sphinxcode{\sphinxupquote{3}}):
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{n}{p} \PYG{o}{=} \PYG{n}{read\PYGZus{}plate}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{path/to/file}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{replicates}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{)}
 \end{sphinxVerbatim}
-
-\sphinxstylestrong{NOTE that the number of replicates have to be the same for all samples!}
 
 It can be specified which direction the replicates were loaded
 onto the plate where \sphinxcode{\sphinxupquote{'hori'}} (horizontal) means towards
@@ -207,6 +205,13 @@ increasing numbers and \sphinxcode{\sphinxupquote{'vert'}} is towards increasing
 \end{sphinxVerbatim}
 
 \sphinxstylestrong{NOTE that the replicates have to be next to each other!}
+
+Alternatively it can be specified which wells contains replicates:
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{p} \PYG{o}{=} \PYG{n}{read\PYGZus{}plate}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{path/to/file}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{named\PYGZus{}samples}\PYG{o}{=}\PYG{p}{[}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{B03}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{D07}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{B02}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{E06}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{G12}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{]}
+\end{sphinxVerbatim}
 
 Data from Tecan platereaders can be read in as (default is \sphinxcode{\sphinxupquote{'bmg'}}):
 
@@ -226,7 +231,11 @@ or in row format \sphinxcode{\sphinxupquote{False}} (default is \sphinxcode{\sph
 \PYG{n}{p} \PYG{o}{=} \PYG{n}{read\PYGZus{}plate}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{path/to/file}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{transposed}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
 \end{sphinxVerbatim}
 
-The time unit can also be specified which as either \sphinxcode{\sphinxupquote{'seconds'}}, \sphinxcode{\sphinxupquote{'minutes'}}, \sphinxcode{\sphinxupquote{'hours'}}, or \sphinxcode{\sphinxupquote{'days'}} will carry along into indexes
+Note that it’s automatically detected if several measurements
+(\sphinxstyleemphasis{e.g.}) were made per time-point (see {\hyperref[\detokenize{cookbook:accessing-data}]{\sphinxcrossref{\DUrole{std,std-ref}{Accessing data}}}})
+
+The time unit can also be specified which as either \sphinxcode{\sphinxupquote{'seconds'}},
+\sphinxcode{\sphinxupquote{'minutes'}}, \sphinxcode{\sphinxupquote{'hours'}}, or \sphinxcode{\sphinxupquote{'days'}} will carry along into indexes
 if exported and to unit of x-axis if plotted (default is \sphinxcode{\sphinxupquote{'hours'}}):
 
 \fvset{hllines={, ,}}%
@@ -287,15 +296,30 @@ time points:
 
 \section{Plotting data}
 \label{\detokenize{cookbook:plotting-data}}
-The data is plotted according to replicates, and subtitles can be added (default is \sphinxtitleref{None}),
-and it can be specified whether all plots should have the same y-axis (default is \sphinxtitleref{True}):
+The data is plotted according to replicates, and subtitles can be added
+(default is \sphinxtitleref{None}):
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n}{p}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{titles}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{condition 1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{conditions 2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,} \PYG{n}{sharey}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+\PYG{n}{p}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{titles}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{condition 1}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{conditions 2}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
 \end{sphinxVerbatim}
 
-Will make the number of samples plots, all replicates of a given condition in the given plot.
+It can be specified whether all plots should have its own y-axis,
+whether all plots should have the same (default is \sphinxtitleref{True}):
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{p}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{sharey}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{False}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+If several measurements were made per time-point it can be
+specified whether all measurements should be plotted or not
+(default is \sphinxtitleref{True}):
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{p}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{plot\PYGZus{}multi}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{False}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 
 \chapter{platelib}
@@ -314,10 +338,16 @@ Will make the number of samples plots, all replicates of a given condition in th
 \phantomsection\label{\detokenize{platelib:platelib.fitfun.exp_rise}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{exp\_rise}}}{\emph{t}, \emph{a}, \emph{b}, \emph{k}}{}
 \end{fulllineitems}
 
+\index{fit\_fun() (in module platelib.fitfun)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{platelib:platelib.fitfun.fit_fun}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{fit\_fun}}}{\emph{func, df, bounds=({[}0, 0, 0, 0{]}, {[}1, 50, 10, 65{]})}}{}
+\end{fulllineitems}
+
 \index{fit\_plate (class in platelib.fitfun)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.fit_plate}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{fit\_plate}}}{\emph{data}, \emph{replicates=3}, \emph{rep\_direction='hori'}}{}
+\phantomsection\label{\detokenize{platelib:platelib.fitfun.fit_plate}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{fit\_plate}}}{\emph{data}, \emph{replicates=3}, \emph{rep\_direction='hori'}, \emph{multi\_chrom=1}}{}
 Bases: {\hyperref[\detokenize{platelib:platelib.plateread.Plate_data}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{platelib.plateread.Plate\_data}}}}}
 
 \end{fulllineitems}
@@ -360,6 +390,12 @@ in a 2-D array, and modeled by Gaussian functions
 \phantomsection\label{\detokenize{platelib:platelib.fitfun.quadratic}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{quadratic}}}{\emph{t}, \emph{a}, \emph{b}, \emph{c}}{}
 \end{fulllineitems}
 
+\index{sigmoid() (in module platelib.fitfun)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{platelib:platelib.fitfun.sigmoid}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{sigmoid}}}{\emph{x}, \emph{y0}, \emph{L}, \emph{k}, \emph{x\_half}}{}
+\end{fulllineitems}
+
 \index{sigmoidal\_auto() (in module platelib.fitfun)}
 
 \begin{fulllineitems}
@@ -372,22 +408,23 @@ in a 2-D array, and modeled by Gaussian functions
 \label{\detokenize{platelib:platelib-plateread-module}}\label{\detokenize{platelib:module-platelib.plateread}}\index{platelib.plateread (module)}\index{Plate\_data (class in platelib.plateread)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{Plate\_data}}}{\emph{data}, \emph{replicates=3}, \emph{rep\_direction='hori'}}{}
+\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{Plate\_data}}}{\emph{data}, \emph{replicates=3}, \emph{rep\_direction='hori'}, \emph{multi\_chrom=1}}{}
 Class for containing data from a platereader assay.
-\begin{quote}
 \begin{quote}\begin{description}
-\item[{param data}] \leavevmode
-A pandas DataFrame with time points as index and wells as columns
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{data}} \textendash{} A pandas DataFrame with time points as index and wells as columns
 
-\item[{param replicates}] \leavevmode
-Positive integer of replicates, assuming equal number of replicates of all samples
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{replicates}} \textendash{} Positive integer of replicates, assuming equal number of replicates of all samples
+
+\end{itemize}
 
 \end{description}\end{quote}
-\end{quote}
-\index{plot\_data() (platelib.plateread.Plate\_data method)}
+\index{plot() (platelib.plateread.Plate\_data method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.plot_data}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot\_data}}}{\emph{titles=None}, \emph{sharey=True}}{}
+\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot}}}{\emph{titles=None}, \emph{sharey=True}, \emph{plot\_multi=True}}{}
 Plots the number the number of sample i.e. replicates/wells in the data 
 set.
 \begin{quote}\begin{description}
@@ -396,7 +433,8 @@ set.
 \sphinxstyleliteralstrong{\sphinxupquote{titles}} \textendash{} List-like object of subtitles
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{sharey}} \textendash{} Boolean, default is True, where the y-axis limits are identical. If False y-axis limits are given by matplotlib defaults.
+\sphinxstyleliteralstrong{\sphinxupquote{sharey}} \textendash{} Boolean, default is True, where all y-axis limits will be identical. If False y-axis limits per plot are given by matplotlib defaults.
+:param plot\_multi: Boolean, default is False, is several different measurements are present, only plot the first one. If False plots all of the values.
 
 \end{itemize}
 
@@ -407,11 +445,17 @@ set.
 \index{to\_a\_csv() (platelib.plateread.Plate\_data method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.to_a_csv}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{to\_a\_csv}}}{\emph{path}}{}
+\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.to_a_csv}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{to\_a\_csv}}}{\emph{path}, \emph{one\_per\_multi\_c=False}}{}
 Returns the data as a pandas dataframe with times as indexes
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{path}} \textendash{} path to store output at
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{path}} \textendash{} String of path to store output
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{one\_per\_multi\_c}} \textendash{} Boolean, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one file.
+
+\end{itemize}
 
 \end{description}\end{quote}
 
@@ -420,8 +464,13 @@ Returns the data as a pandas dataframe with times as indexes
 \index{to\_a\_dataframe() (platelib.plateread.Plate\_data method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.to_a_dataframe}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{to\_a\_dataframe}}}{}{}
-Returns the data as a pandas dataframe with times as indexes
+\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.to_a_dataframe}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{to\_a\_dataframe}}}{\emph{one\_per\_multi\_c=False}}{}
+Returns the data as a list of pandas dataframe(s) with times as indexes
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{one\_per\_multi\_c}} \textendash{} Boolean, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one dataframe.
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -431,7 +480,7 @@ Returns the data as a pandas dataframe with times as indexes
 \index{read\_plate() (in module platelib.plateread)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.read_plate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{read\_plate}}}{\emph{filename}, \emph{replicates=3}, \emph{rep\_direction='hori'}, \emph{time\_unit='hours'}, \emph{platereader='bmg'}, \emph{transposed=True}}{}
+\phantomsection\label{\detokenize{platelib:platelib.plateread.read_plate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{read\_plate}}}{\emph{filename}, \emph{replicates=3}, \emph{rep\_direction='hori'}, \emph{time\_unit='hours'}, \emph{named\_samples={[}{]}}, \emph{platereader='bmg'}, \emph{transposed=True}}{}
 Reads in data from a CSV file from a BMG or Tecan platereader and returns a platedata object.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
@@ -439,7 +488,7 @@ Reads in data from a CSV file from a BMG or Tecan platereader and returns a plat
 \sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} Path to filename as a string
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{replicates}} \textendash{} The number of replicates per sample, excepts a positive integer.
+\sphinxstyleliteralstrong{\sphinxupquote{replicates}} \textendash{} The number of replicates per sample, expects a positive integer.
 
 \item {} 
 \sphinxstyleliteralstrong{\sphinxupquote{rep\_direction}} \textendash{} The directions replicates is in. Only ‘hori’ and ‘vert’ are accepted directions, ‘hori’ if replicates are going from left to rigth ‘vert’ from replicates going from top to bottom.
@@ -498,6 +547,19 @@ Reads in untransposed data from a BMG platereader and returns a pandas DataFrame
 
 \end{fulllineitems}
 
+\index{search\_start() (in module platelib.plateread)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{platelib:platelib.plateread.search_start}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{search\_start}}}{\emph{filename}}{}
+Find start of data region and returns the line number by finding the line that starts with “Well”.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} Path to filename as a string
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{vert\_order() (in module platelib.plateread)}
 
 \begin{fulllineitems}
@@ -509,7 +571,7 @@ Helper function to reorder data if vertical replicates were made.
 \sphinxstyleliteralstrong{\sphinxupquote{cols}} \textendash{} List-like object of columns names (wells) all assumed to have the form ‘A12’.
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{reps}} \textendash{} Oositive integer number of replicates.
+\sphinxstyleliteralstrong{\sphinxupquote{reps}} \textendash{} List of positive integer number of replicates.
 
 \end{itemize}
 
@@ -530,7 +592,7 @@ highlighting the bug/extension/compatibilities before doing a pull request.
 
 \section{More tools}
 \label{\detokenize{contribute:more-tools}}
-Apart from the tools listed in {\hyperref[\detokenize{install:installation}]{\sphinxcrossref{\DUrole{std,std-ref}{Installation}}}} the following is needeed:
+Apart from the tools listed in {\hyperref[\detokenize{install:installation}]{\sphinxcrossref{\DUrole{std,std-ref}{Installation}}}} the following is needed:
 \begin{itemize}
 \item {} 
 Unix-like system
@@ -559,7 +621,7 @@ The versioning scheme of platelib should be done in reasonable
 accordance with the so called \sphinxhref{https://semver.org/}{Semantic versioning} where
 X.Y.Z should be read as MAJOR.MINOR.PATCH.
 
-The version number has to be changed in to two files \sphinxcode{\sphinxupquote{setup.py}} and
+The version number has to be changed in the two files \sphinxcode{\sphinxupquote{setup.py}} and
 \sphinxcode{\sphinxupquote{docs/source/conf.py}}
 
 
