@@ -35,7 +35,8 @@ Download
 --------
 
 Either download the [source
-distribution](https://github.com/edager/platelib/dist/) directly or use:
+distribution](https://github.com/edager/platelib/tree/master/dist)
+directly or use:
 
 > `git https://github.com/edager/platelib`
 

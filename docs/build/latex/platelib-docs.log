@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.23)  2 MAY 2018 00:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.23)  3 MAY 2018 05:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1192,7 +1192,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 411--411
 ]
 Chapter 6.
 
-Underfull \hbox (badness 7522) in paragraph at lines 589--591
+Underfull \hbox (badness 7522) in paragraph at lines 591--593
 \T1/ptm/m/n/10 Contributions are more than wel-come, please raise an is-sue on 
 the github page high-light-ing the
  []
@@ -1207,11 +1207,11 @@ the github page high-light-ing the
 ] [17
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 695.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 695.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 697.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 697.
  (./platelib-docs.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 695.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 695.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 697.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 697.
 Package rerunfilecheck Info: File `platelib-docs.out' has not changed.
 (rerunfilecheck)             Checksum: ADB01C5647B0EE52392DAF1F4BADA29C;2460.
  ) 
@@ -1232,7 +1232,7 @@ uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb>
 texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /urw/times/utmri8a.pfb>
-Output written on platelib-docs.pdf (21 pages, 129057 bytes).
+Output written on platelib-docs.pdf (21 pages, 128061 bytes).
 PDF statistics:
  335 PDF objects out of 1000 (max. 8388607)
  295 compressed objects within 3 object streams

@@ -27,8 +27,6 @@ def read_plate(filename,replicates=3,rep_direction='hori',time_unit='hours',name
     :param platereader: The plate reader used to collect the data. Only 'bmg' and 'tecan' are accepted platereaders
     :param transposed: Wether the wells are in column (True) or row format (False).   
     '''
-    
-
     if filename.lower().endswith(('.xls','.xlsx','.csv')) != True:
         raise ValueError('"{}" is not a supported filetype, only ".xls",".xlsx", and ".csv" are'.format(filename))
 
@@ -48,7 +46,7 @@ def read_plate(filename,replicates=3,rep_direction='hori',time_unit='hours',name
         raise ValueError('"{}" platereader format is not supported , only "bmg" and "tecan" are'.format(platereader))
     
     if platereader == 'bmg': 
-        if transposed==True:
+        if transposed:
             df = read_transposed_bmg(filename)
         else:
             df = read_untransposed_bmg(filename)
@@ -59,7 +57,7 @@ def read_plate(filename,replicates=3,rep_direction='hori',time_unit='hours',name
     # convert to specfied time units:      
     for a,b in zip(Timepars,Timefactor):
         if time_unit == a:
-            df.index = df.index//b
+            df.index = df.index/b
             df.index.name = a
 	
     # how many measurements at each time-point?
@@ -83,26 +81,19 @@ def search_start(filename):
     Find start of data region and returns the line number by finding the line that starts with "Well".
     
     :param filename: Path to filename as a string   
-    '''
-    lines_to_skip = 0  
+    ''' 
     if filename.lower().endswith(('.xls','.xlsx')):
         wb = open_workbook(filename)
         s = wb.sheets()[0]
         for r in range(s.nrows):
-                lines_to_skip += 1
-                c = s.cell(r,0)
-                if c.value == 'Well':
-                    break
+                if s.cell(r,0).value == 'Well':
+                    return r + 1
     
     else:
         with open(filename, 'r') as f:
-            for line in f:
-                lines_to_skip += 1
+            for r,line in enumerate(f):
                 if line.startswith('Well'):
-                    break
-    
-    return lines_to_skip
-                
+                    return r + 1                 
 
 def read_transposed_bmg(filename):
     '''
@@ -110,7 +101,6 @@ def read_transposed_bmg(filename):
     
     :param filename: Path to filename as a string   
     '''
-    
     start = search_start(filename) 
     skiprows = range(start - 1)
     skiprows.insert(-1, start)
@@ -123,17 +113,16 @@ def read_transposed_bmg(filename):
         df = pd.read_table(filename,
                           sep=None, index_col = 1,
                           skiprows=skiprows,engine='python')
-            
+        
     df.drop('Well', axis=1, inplace=True)
-    return df
+    return df 
         
 def read_untransposed_bmg(filename):        
     '''
     Reads in untransposed data from a BMG platereader and returns a pandas DataFrame object.
     
     :param filename: Path to filename as a string   
-    '''
-    
+    '''   
     skiprows = range(search_start(filename))
     if filename.lower().endswith(('.xls','.xlsx')):
         df = pd.read_excel(filename,skiprows=skiprows)
@@ -194,7 +183,6 @@ class Plate_data():
     :param data: A pandas DataFrame with time points as index and wells as columns
     :param replicates: Positive integer of replicates, assuming equal number of replicates of all samples     
     '''
-    
     def __init__(self, data, replicates=3, rep_direction='hori',multi_chrom=1):
            
         self.data = data
@@ -260,41 +248,33 @@ class Plate_data():
         
         :param titles: List-like object of subtitles 
         :param sharey: Boolean, default is True, where all y-axis limits will be identical. If False y-axis limits per plot are given by matplotlib defaults.
-		:param plot_multi: Boolean, default is False, is several different measurements are present, only plot the first one. If False plots all of the values.      
+        :param plot_multi: Boolean, default is False, is several different measurements are present, only plot the first one. If False plots all of the values.      
         '''        
+        data = self.data
+    
         if titles == None:
             titles = [None]*len(self.wells)
         
+        if sharey:
+            lim = (0.95*data.min().min(),1.05*data.max().max())
+        else:
+            lim = None
+        
+        if not plot_multi:
+			data = data.iloc[:self.N_unique_timepoints,:]
         
         nplots = len(self.rep) 
-        rows =  int(np.ceil(nplots/5))
-        fig = plt.figure(figsize=(15,rows*15),dpi=100,tight_layout=True)
-        
-        # Keeping track of the biggest range on y-axis 
-        max_ylim = [10e6,0]  
- 
-        data = self.data
-        
-        if plot_multi == False:
-			data = data.iloc[:self.N_unique_timepoints,:]
-		
+        rows =  int(np.ceil(nplots/5))    
+	
+        fig = plt.figure(figsize=(15,rows*15), dpi=100,tight_layout=True)
+	
         for i in range(1,nplots):
-            axes = fig.add_subplot(rows,5,i)
+            ax = fig.add_subplot(rows,5,i)
+            ax.set_ylim(lim)
             iC = data.iloc[:, self.rep[i-1]:self.rep[i]]
-            iC.plot(ax=axes,style='o', title=titles[i])
-            
-            if sharey: 
-            
-                low_y, high_y =  axes.get_ylim()
-            
-                if low_y < max_ylim[0] or high_y > max_ylim[1]:  
-                    max_ylim[0], max_ylim[1] = min((max_ylim[0],low_y)), max((max_ylim[1],high_y))
-                    for ax in fig.get_axes():
-                        ax.set_ylim(tuple(max_ylim))
-            
-                axes.set_ylim(tuple(max_ylim))
-                
-		fig.show()
+            iC.plot(ax=ax,style='o', title=titles[i])
+        
+        fig.show()
 
 
                 

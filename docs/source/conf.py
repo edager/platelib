@@ -24,9 +24,9 @@ copyright = u'2018, Emil Dandanell Agerschou'
 author = u'Emil Dandanell Agerschou'
 
 # The short X.Y version
-version = u'0.1.3'
+version = u'0.1.4'
 # The full version, including alpha/beta/rc tags
-release = u'0.1.3-alpha'
+release = u'0.1.4-alpha'
 
 
 # -- General configuration ---------------------------------------------------

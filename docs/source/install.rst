@@ -19,7 +19,7 @@ Either download the `source distribution`_ directly or use:
 
 	 ``git https://github.com/edager/platelib``
 
-.. _source distribution: https://github.com/edager/platelib/dist/
+.. _source distribution: https://github.com/edager/platelib/tree/master/dist
 
 Install
 -------------

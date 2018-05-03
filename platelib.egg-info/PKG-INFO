@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: platelib
-Version: 0.1.3
+Version: 0.1.4
 Summary: Common tasks for working with platereader data
 Home-page: https://github.com/edager/platelib
 Author: Emil Dandanell Agerschou
@@ -43,7 +43,8 @@ Description: Introduction
         --------
         
         Either download the [source
-        distribution](https://github.com/edager/platelib/dist/) directly or use:
+        distribution](https://github.com/edager/platelib/tree/master/dist)
+        directly or use:
         
         > `git https://github.com/edager/platelib`
         
