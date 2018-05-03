@@ -19,6 +19,10 @@
   \item linear() (in module platelib.fitfun), \hyperpage{9}
 
   \indexspace
+  \bigletter N
+  \item named\_order() (in module platelib.plateread), \hyperpage{10}
+
+  \indexspace
   \bigletter O
   \item objective() (in module platelib.fitfun), \hyperpage{9}
 
@@ -51,6 +55,7 @@
   \bigletter T
   \item to\_a\_csv() (platelib.plateread.Plate\_data method), \hyperpage{10}
   \item to\_a\_dataframe() (platelib.plateread.Plate\_data method), \hyperpage{10}
+  \item to\_time\_units() (in module platelib.plateread), \hyperpage{11}
 
   \indexspace
   \bigletter V

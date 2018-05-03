@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>platelib package &#8212; platelib-docs 0.1.4-alpha documentation</title>
+    <title>platelib package &#8212; platelib-docs 0.1.5-alpha documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="_static/documentation_options.js"></script>
@@ -51,7 +51,7 @@
 
 <dl class="class">
 <dt id="platelib.fitfun.fit_plate">
-<em class="property">class </em><code class="descclassname">platelib.fitfun.</code><code class="descname">fit_plate</code><span class="sig-paren">(</span><em>data</em>, <em>replicates=3</em>, <em>rep_direction='hori'</em>, <em>multi_chrom=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/fitfun.html#fit_plate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.fitfun.fit_plate" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">platelib.fitfun.</code><code class="descname">fit_plate</code><span class="sig-paren">(</span><em>data</em>, <em>replicates</em>, <em>multi_chrom</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/fitfun.html#fit_plate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.fitfun.fit_plate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#platelib.plateread.Plate_data" title="platelib.plateread.Plate_data"><code class="xref py py-class docutils literal notranslate"><span class="pre">platelib.plateread.Plate_data</span></code></a></p>
 </dd></dl>
 
@@ -100,14 +100,14 @@ in a 2-D array, and modeled by Gaussian functions</p>
 <span id="platelib-plateread-module"></span><h2>platelib.plateread module<a class="headerlink" href="#module-platelib.plateread" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="platelib.plateread.Plate_data">
-<em class="property">class </em><code class="descclassname">platelib.plateread.</code><code class="descname">Plate_data</code><span class="sig-paren">(</span><em>data</em>, <em>replicates=3</em>, <em>rep_direction='hori'</em>, <em>multi_chrom=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#Plate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.Plate_data" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">platelib.plateread.</code><code class="descname">Plate_data</code><span class="sig-paren">(</span><em>data</em>, <em>replicates</em>, <em>multi_chrom</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#Plate_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.Plate_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for containing data from a platereader assay.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data</strong> – A pandas DataFrame with time points as index and wells as columns</li>
+<li><strong>data</strong> – Pandas DataFrame with time points as index and wells as columns</li>
 <li><strong>replicates</strong> – Positive integer of replicates, assuming equal number of replicates of all samples</li>
 </ul>
 </td>
@@ -116,17 +116,17 @@ in a 2-D array, and modeled by Gaussian functions</p>
 </table>
 <dl class="method">
 <dt id="platelib.plateread.Plate_data.plot">
-<code class="descname">plot</code><span class="sig-paren">(</span><em>titles=None</em>, <em>sharey=True</em>, <em>plot_multi=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#Plate_data.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.Plate_data.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots the number the number of sample i.e. replicates/wells in the data 
-set.</p>
+<code class="descname">plot</code><span class="sig-paren">(</span><em>titles=None</em>, <em>sharey=True</em>, <em>plot_multi=True</em>, <em>return_fig=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#Plate_data.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.Plate_data.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the number of samples i.e. replicates/wells in the data set.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>titles</strong> – List-like object of subtitles</li>
-<li><strong>sharey</strong> – Boolean, default is True, where all y-axis limits will be identical. If False y-axis limits per plot are given by matplotlib defaults.</li>
-<li><strong>plot_multi</strong> – Boolean, default is False, is several different measurements are present, only plot the first one. If False plots all of the values.</li>
+<li><strong>sharey</strong> – Bool, if True all y-axis limits will be identical, if False y-axis limits are given by matplotlib defaults.</li>
+<li><strong>plot_multi</strong> – Bool, if several different measurements are present per time point, only plot the first one, if False plots all of the values.</li>
+<li><strong>return_fig</strong> – Bool, if True returns a figure object, if False only plot the data</li>
 </ul>
 </td>
 </tr>
@@ -144,7 +144,7 @@ set.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>path</strong> – String of path to store output</li>
-<li><strong>one_per_multi_c</strong> – Boolean, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one file.</li>
+<li><strong>one_per_multi_c</strong> – Bool, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one file.</li>
 </ul>
 </td>
 </tr>
@@ -160,7 +160,7 @@ set.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>one_per_multi_c</strong> – Boolean, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one dataframe.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>one_per_multi_c</strong> – Bool, if ‘True’ one measurement per dataframe will be exported, if False all will be exported in one dataframe.</td>
 </tr>
 </tbody>
 </table>
@@ -169,25 +169,34 @@ set.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="platelib.plateread.read_plate">
-<code class="descclassname">platelib.plateread.</code><code class="descname">read_plate</code><span class="sig-paren">(</span><em>filename</em>, <em>replicates=3</em>, <em>rep_direction='hori'</em>, <em>time_unit='hours'</em>, <em>named_samples=[]</em>, <em>platereader='bmg'</em>, <em>transposed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#read_plate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.read_plate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads in data from a CSV file from a BMG or Tecan platereader and returns a platedata object.</p>
+<dt id="platelib.plateread.named_order">
+<code class="descclassname">platelib.plateread.</code><code class="descname">named_order</code><span class="sig-paren">(</span><em>named_samples</em>, <em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#named_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.named_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorder dataframe columns according to the specified order, returns dataframe and list of replicates.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> – Path to filename as a string</li>
-<li><strong>replicates</strong> – The number of replicates per sample, expects a positive integer.</li>
-<li><strong>rep_direction</strong> – The directions replicates is in. Only ‘hori’ and ‘vert’ are accepted directions, ‘hori’ if replicates are going from left to rigth ‘vert’ from replicates going from top to bottom.</li>
-<li><strong>time_unit</strong> – The time unit one would like to have, accepted values are: ‘seconds’,’minutes’,’hours’,’days’</li>
-<li><strong>platereader</strong> – The plate reader used to collect the data. Only ‘bmg’ and ‘tecan’ are accepted platereaders</li>
-<li><strong>transposed</strong> – Wether the wells are in column (True) or row format (False).</li>
+<li><strong>named_samples</strong> – List of lists, one list per samples containing all replicates</li>
+<li><strong>df</strong> – Pandas DataFrame</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="platelib.plateread.read_plate">
+<code class="descclassname">platelib.plateread.</code><code class="descname">read_plate</code><span class="sig-paren">(</span><em>filename</em>, <em>replicates=3</em>, <em>rep_direction='hori'</em>, <em>time_unit='hours'</em>, <em>named_samples=[]</em>, <em>platereader='bmg'</em>, <em>transposed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#read_plate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.read_plate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in data from a CSV file from a BMG or Tecan platereader and returns a platedata object.</p>
+<p>:param filename:String, path to filename
+:param replicates: Positive integer, The number of replicates per sample.
+:param rep_direction: String, directions replicates is in. Only ‘hori’ and ‘vert’ are accepted directions where ‘hori’ if replicates are going from left to rigth ‘vert’ from replicates going from top to bottom. 
+:param time_unit: String, time unit one would like to have, accepted values are: ‘seconds’,’minutes’,’hours’,’days’  
+:param named_samples: List of lists,  where each list should correpond to a sample and contain all replicates of it 
+:param platereader: String, The plate reader used to collect the data. Only ‘bmg’ and ‘tecan’ are accepted platereaders
+:param transposed: Bool, specifies wether the wells are in column (True) or row format (False).</p>
 </dd></dl>
 
 <dl class="function">
@@ -198,7 +207,7 @@ set.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – Path to filename as a string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – String, path to filename</td>
 </tr>
 </tbody>
 </table>
@@ -212,7 +221,7 @@ set.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – Path to filename as a string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – String, path to filename.</td>
 </tr>
 </tbody>
 </table>
@@ -226,7 +235,7 @@ set.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – Path to filename as a string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – String, path to filename.</td>
 </tr>
 </tbody>
 </table>
@@ -240,7 +249,25 @@ set.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – Path to filename as a string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> – String, path to filename.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="platelib.plateread.to_time_units">
+<code class="descclassname">platelib.plateread.</code><code class="descname">to_time_units</code><span class="sig-paren">(</span><em>df</em>, <em>time_unit</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#to_time_units"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.to_time_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the index a dataframe into the time unit specified, returns dataframe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>df</strong> – Pandas DataFrame</li>
+<li><strong>time_unit</strong> – String, allowed values are ‘seconds’ ,’minutes’,’hours’, and ‘days’.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -248,15 +275,15 @@ set.</p>
 
 <dl class="function">
 <dt id="platelib.plateread.vert_order">
-<code class="descclassname">platelib.plateread.</code><code class="descname">vert_order</code><span class="sig-paren">(</span><em>cols</em>, <em>reps</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#vert_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.vert_order" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function to reorder data if vertical replicates were made.</p>
+<code class="descclassname">platelib.plateread.</code><code class="descname">vert_order</code><span class="sig-paren">(</span><em>replicates</em>, <em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/platelib/plateread.html#vert_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#platelib.plateread.vert_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorder dataframe column to vertical order, returns dataframe.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cols</strong> – List-like object of columns names (wells) all assumed to have the form ‘A12’.</li>
-<li><strong>reps</strong> – List of positive integer number of replicates.</li>
+<li><strong>replicates</strong> – List of positive integer number of replicates.</li>
+<li><strong>df</strong> – Pandas DataFrame</li>
 </ul>
 </td>
 </tr>

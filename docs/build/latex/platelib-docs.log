@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.23)  3 MAY 2018 05:27
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.23)  3 MAY 2018 22:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1179,12 +1179,6 @@ LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
 (Font)              Font shape `T1/pcr/b/n' tried instead on input line 338.
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <10> not available
 (Font)              Font shape `T1/pcr/m/sl' tried instead on input line 351.
-
-Underfull \hbox (badness 10000) in paragraph at lines 411--411
-[]\T1/ptm/m/it/10 data\T1/ptm/m/n/10 , \T1/ptm/m/it/10 repli-cates=3\T1/ptm/m/n
-/10 , \T1/ptm/m/it/10 rep_direction='hori'\T1/ptm/m/n/10 ,
- []
-
 [9
 
 ] [10] [11] [12
@@ -1192,7 +1186,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 411--411
 ]
 Chapter 6.
 
-Underfull \hbox (badness 7522) in paragraph at lines 591--593
+Underfull \hbox (badness 7522) in paragraph at lines 616--618
 \T1/ptm/m/n/10 Contributions are more than wel-come, please raise an is-sue on 
 the github page high-light-ing the
  []
@@ -1207,22 +1201,22 @@ the github page high-light-ing the
 ] [17
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 697.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 697.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 722.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 722.
  (./platelib-docs.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 697.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 697.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 722.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 722.
 Package rerunfilecheck Info: File `platelib-docs.out' has not changed.
-(rerunfilecheck)             Checksum: ADB01C5647B0EE52392DAF1F4BADA29C;2460.
+(rerunfilecheck)             Checksum: C8BCC720AEBCC1DB18B0F956079B576F;2460.
  ) 
 Here is how much of TeX's memory you used:
- 13957 strings out of 493029
- 192614 string characters out of 6136234
- 291817 words of memory out of 5000000
- 17110 multiletter control sequences out of 15000+600000
+ 13961 strings out of 493029
+ 192720 string characters out of 6136234
+ 291927 words of memory out of 5000000
+ 17112 multiletter control sequences out of 15000+600000
  51505 words of font info for 75 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 37i,11n,45p,783b,625s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,11n,45p,783b,633s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
@@ -1232,10 +1226,10 @@ uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb>
 texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /urw/times/utmri8a.pfb>
-Output written on platelib-docs.pdf (21 pages, 128061 bytes).
+Output written on platelib-docs.pdf (21 pages, 128940 bytes).
 PDF statistics:
- 335 PDF objects out of 1000 (max. 8388607)
- 295 compressed objects within 3 object streams
- 71 named destinations out of 1000 (max. 500000)
+ 342 PDF objects out of 1000 (max. 8388607)
+ 301 compressed objects within 4 object streams
+ 73 named destinations out of 1000 (max. 500000)
  205 words of extra memory for PDF output out of 10000 (max. 10000000)
 

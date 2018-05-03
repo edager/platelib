@@ -56,7 +56,7 @@
 
 \title{platelib Documentation}
 \date{May 03, 2018}
-\release{0.1.4-alpha}
+\release{0.1.5-alpha}
 \author{Emil Dandanell Agerschou}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -347,7 +347,7 @@ specified whether all measurements should be plotted or not
 \index{fit\_plate (class in platelib.fitfun)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.fit_plate}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{fit\_plate}}}{\emph{data}, \emph{replicates=3}, \emph{rep\_direction='hori'}, \emph{multi\_chrom=1}}{}
+\phantomsection\label{\detokenize{platelib:platelib.fitfun.fit_plate}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{fit\_plate}}}{\emph{data}, \emph{replicates}, \emph{multi\_chrom}}{}
 Bases: {\hyperref[\detokenize{platelib:platelib.plateread.Plate_data}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{platelib.plateread.Plate\_data}}}}}
 
 \end{fulllineitems}
@@ -408,12 +408,12 @@ in a 2-D array, and modeled by Gaussian functions
 \label{\detokenize{platelib:platelib-plateread-module}}\label{\detokenize{platelib:module-platelib.plateread}}\index{platelib.plateread (module)}\index{Plate\_data (class in platelib.plateread)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{Plate\_data}}}{\emph{data}, \emph{replicates=3}, \emph{rep\_direction='hori'}, \emph{multi\_chrom=1}}{}
+\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{Plate\_data}}}{\emph{data}, \emph{replicates}, \emph{multi\_chrom}}{}
 Class for containing data from a platereader assay.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{data}} \textendash{} A pandas DataFrame with time points as index and wells as columns
+\sphinxstyleliteralstrong{\sphinxupquote{data}} \textendash{} Pandas DataFrame with time points as index and wells as columns
 
 \item {} 
 \sphinxstyleliteralstrong{\sphinxupquote{replicates}} \textendash{} Positive integer of replicates, assuming equal number of replicates of all samples
@@ -424,19 +424,21 @@ Class for containing data from a platereader assay.
 \index{plot() (platelib.plateread.Plate\_data method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot}}}{\emph{titles=None}, \emph{sharey=True}, \emph{plot\_multi=True}}{}
-Plots the number the number of sample i.e. replicates/wells in the data 
-set.
+\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot}}}{\emph{titles=None}, \emph{sharey=True}, \emph{plot\_multi=True}, \emph{return\_fig=False}}{}
+Plots the number of samples i.e. replicates/wells in the data set.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
 \item {} 
 \sphinxstyleliteralstrong{\sphinxupquote{titles}} \textendash{} List-like object of subtitles
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{sharey}} \textendash{} Boolean, default is True, where all y-axis limits will be identical. If False y-axis limits per plot are given by matplotlib defaults.
+\sphinxstyleliteralstrong{\sphinxupquote{sharey}} \textendash{} Bool, if True all y-axis limits will be identical, if False y-axis limits are given by matplotlib defaults.
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{plot\_multi}} \textendash{} Boolean, default is False, is several different measurements are present, only plot the first one. If False plots all of the values.
+\sphinxstyleliteralstrong{\sphinxupquote{plot\_multi}} \textendash{} Bool, if several different measurements are present per time point, only plot the first one, if False plots all of the values.
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{return\_fig}} \textendash{} Bool, if True returns a figure object, if False only plot the data
 
 \end{itemize}
 
@@ -455,7 +457,7 @@ Returns the data as a pandas dataframe with times as indexes
 \sphinxstyleliteralstrong{\sphinxupquote{path}} \textendash{} String of path to store output
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{one\_per\_multi\_c}} \textendash{} Boolean, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one file.
+\sphinxstyleliteralstrong{\sphinxupquote{one\_per\_multi\_c}} \textendash{} Bool, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one file.
 
 \end{itemize}
 
@@ -470,12 +472,31 @@ Returns the data as a pandas dataframe with times as indexes
 Returns the data as a list of pandas dataframe(s) with times as indexes
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{one\_per\_multi\_c}} \textendash{} Boolean, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one dataframe.
+\sphinxstyleliteralstrong{\sphinxupquote{one\_per\_multi\_c}} \textendash{} Bool, if ‘True’ one measurement per dataframe will be exported, if False all will be exported in one dataframe.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
+
+\end{fulllineitems}
+
+\index{named\_order() (in module platelib.plateread)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{platelib:platelib.plateread.named_order}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{named\_order}}}{\emph{named\_samples}, \emph{df}}{}
+Reorder dataframe columns according to the specified order, returns dataframe and list of replicates.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{named\_samples}} \textendash{} List of lists, one list per samples containing all replicates
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{df}} \textendash{} Pandas DataFrame
+
+\end{itemize}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -484,29 +505,14 @@ Returns the data as a list of pandas dataframe(s) with times as indexes
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{platelib:platelib.plateread.read_plate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{read\_plate}}}{\emph{filename}, \emph{replicates=3}, \emph{rep\_direction='hori'}, \emph{time\_unit='hours'}, \emph{named\_samples={[}{]}}, \emph{platereader='bmg'}, \emph{transposed=True}}{}
 Reads in data from a CSV file from a BMG or Tecan platereader and returns a platedata object.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} Path to filename as a string
 
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{replicates}} \textendash{} The number of replicates per sample, expects a positive integer.
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{rep\_direction}} \textendash{} The directions replicates is in. Only ‘hori’ and ‘vert’ are accepted directions, ‘hori’ if replicates are going from left to rigth ‘vert’ from replicates going from top to bottom.
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{time\_unit}} \textendash{} The time unit one would like to have, accepted values are: ‘seconds’,’minutes’,’hours’,’days’
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{platereader}} \textendash{} The plate reader used to collect the data. Only ‘bmg’ and ‘tecan’ are accepted platereaders
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{transposed}} \textendash{} Wether the wells are in column (True) or row format (False).
-
-\end{itemize}
-
-\end{description}\end{quote}
+:param filename:String, path to filename
+:param replicates: Positive integer, The number of replicates per sample.
+:param rep\_direction: String, directions replicates is in. Only ‘hori’ and ‘vert’ are accepted directions where ‘hori’ if replicates are going from left to rigth ‘vert’ from replicates going from top to bottom. 
+:param time\_unit: String, time unit one would like to have, accepted values are: ‘seconds’,’minutes’,’hours’,’days’  
+:param named\_samples: List of lists,  where each list should correpond to a sample and contain all replicates of it 
+:param platereader: String, The plate reader used to collect the data. Only ‘bmg’ and ‘tecan’ are accepted platereaders
+:param transposed: Bool, specifies wether the wells are in column (True) or row format (False).
 
 \end{fulllineitems}
 
@@ -517,7 +523,7 @@ Reads in data from a CSV file from a BMG or Tecan platereader and returns a plat
 Reads in untransposed data from a tecan platereader and returns a pandas DataFrame object.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} Path to filename as a string
+\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} String, path to filename
 
 \end{description}\end{quote}
 
@@ -530,7 +536,7 @@ Reads in untransposed data from a tecan platereader and returns a pandas DataFra
 Reads in transposed data from a BMG platereader and returns a pandas DataFrame object.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} Path to filename as a string
+\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} String, path to filename.
 
 \end{description}\end{quote}
 
@@ -543,7 +549,7 @@ Reads in transposed data from a BMG platereader and returns a pandas DataFrame o
 Reads in untransposed data from a BMG platereader and returns a pandas DataFrame object.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} Path to filename as a string
+\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} String, path to filename.
 
 \end{description}\end{quote}
 
@@ -556,7 +562,26 @@ Reads in untransposed data from a BMG platereader and returns a pandas DataFrame
 Find start of data region and returns the line number by finding the line that starts with “Well”.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} Path to filename as a string
+\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} String, path to filename.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{to\_time\_units() (in module platelib.plateread)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{platelib:platelib.plateread.to_time_units}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{to\_time\_units}}}{\emph{df}, \emph{time\_unit}}{}
+Convert the index a dataframe into the time unit specified, returns dataframe.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{df}} \textendash{} Pandas DataFrame
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{time\_unit}} \textendash{} String, allowed values are ‘seconds’ ,’minutes’,’hours’, and ‘days’.
+
+\end{itemize}
 
 \end{description}\end{quote}
 
@@ -565,15 +590,15 @@ Find start of data region and returns the line number by finding the line that s
 \index{vert\_order() (in module platelib.plateread)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.vert_order}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{vert\_order}}}{\emph{cols}, \emph{reps}}{}
-Helper function to reorder data if vertical replicates were made.
+\phantomsection\label{\detokenize{platelib:platelib.plateread.vert_order}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{vert\_order}}}{\emph{replicates}, \emph{df}}{}
+Reorder dataframe column to vertical order, returns dataframe.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{cols}} \textendash{} List-like object of columns names (wells) all assumed to have the form ‘A12’.
+\sphinxstyleliteralstrong{\sphinxupquote{replicates}} \textendash{} List of positive integer number of replicates.
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{reps}} \textendash{} List of positive integer number of replicates.
+\sphinxstyleliteralstrong{\sphinxupquote{df}} \textendash{} Pandas DataFrame
 
 \end{itemize}
 
