@@ -26,5 +26,5 @@
 \contentsline {subsection}{\numberline {6.2.1}Changing the version number}{13}{subsection.6.2.1}
 \contentsline {subsection}{\numberline {6.2.2}Create new source distribution}{13}{subsection.6.2.2}
 \contentsline {section}{\numberline {6.3}Planned improvements}{14}{section.6.3}
-\contentsline {chapter}{Python Module Index}{15}{section*.25}
-\contentsline {chapter}{Index}{17}{section*.26}
+\contentsline {chapter}{Python Module Index}{15}{section*.26}
+\contentsline {chapter}{Index}{17}{section*.27}

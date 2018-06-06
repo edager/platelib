@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from string import ascii_uppercase as A_up
 from xlrd import open_workbook
  
-
 # TODO:
 # 1. Extract metadata/header from data files
 # 2. Clean this function by turning the time conversion and reordering into seperate functions    
@@ -279,12 +278,33 @@ class Plate_data():
         for i, ax in zip(range(nplots), axes.flat):
             iC = data.iloc[:, self.rep[i]:self.rep[i+1]]
             iC.plot(ax=ax,style='o', title=titles[i])
-        
+               
         # Remove empty plots:
         for j in range(nplots,len(axes.flat)):
-           axes.flatten()[j].axis("off")     
+           fig.delaxes(axes.flatten()[j])     
         
         fig.show()
         
         if return_fig:
             return fig
+                
+
+def add_lines(fig, hori=False, vert=False):
+    '''
+    Adds horizontal and figure lines to each plot in a subplot
+    
+    :param fig: matplotlib figure object
+    :param hori: Float, y position where the horizontal will be at 
+    :param vert: Float, x position where the horizontal will be at   
+    '''    
+    for ax in fig.axes:    
+        if hori:
+            xmin,xmax = ax.get_xlim()
+            ax.hlines(hori,xmin=xmin,xmax=xmax,linewidth=2, linestyle='--')
+        
+        if vert:
+            ymin,ymax = ax.get_ylim()
+            ax.set_ylim((ymin,ymax))
+            ax.vlines(vert,ymin=ymin,ymax=ymax,linewidth=2, linestyle='--')
+
+    

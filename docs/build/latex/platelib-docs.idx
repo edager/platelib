@@ -14,12 +14,13 @@
 \indexentry{plot() (platelib.plateread.Plate\_data method)|hyperpage}{9}
 \indexentry{to\_a\_csv() (platelib.plateread.Plate\_data method)|hyperpage}{10}
 \indexentry{to\_a\_dataframe() (platelib.plateread.Plate\_data method)|hyperpage}{10}
+\indexentry{add\_lines() (in module platelib.plateread)|hyperpage}{10}
 \indexentry{named\_order() (in module platelib.plateread)|hyperpage}{10}
 \indexentry{read\_plate() (in module platelib.plateread)|hyperpage}{10}
 \indexentry{read\_tecan() (in module platelib.plateread)|hyperpage}{10}
 \indexentry{read\_transposed\_bmg() (in module platelib.plateread)|hyperpage}{10}
-\indexentry{read\_untransposed\_bmg() (in module platelib.plateread)|hyperpage}{10}
-\indexentry{search\_start() (in module platelib.plateread)|hyperpage}{10}
+\indexentry{read\_untransposed\_bmg() (in module platelib.plateread)|hyperpage}{11}
+\indexentry{search\_start() (in module platelib.plateread)|hyperpage}{11}
 \indexentry{to\_time\_units() (in module platelib.plateread)|hyperpage}{11}
 \indexentry{vert\_order() (in module platelib.plateread)|hyperpage}{11}
 \indexentry{platelib (module)|hyperpage}{11}

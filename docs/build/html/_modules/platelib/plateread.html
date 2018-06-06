@@ -38,7 +38,6 @@
 <span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">ascii_uppercase</span> <span class="k">as</span> <span class="n">A_up</span>
 <span class="kn">from</span> <span class="nn">xlrd</span> <span class="k">import</span> <span class="n">open_workbook</span>
  
-
 <span class="c1"># TODO:</span>
 <span class="c1"># 1. Extract metadata/header from data files</span>
 <span class="c1"># 2. Clean this function by turning the time conversion and reordering into seperate functions    </span>
@@ -312,15 +311,36 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nplots</span><span class="p">),</span> <span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">):</span>
             <span class="n">iC</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rep</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span><span class="bp">self</span><span class="o">.</span><span class="n">rep</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
             <span class="n">iC</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">titles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        
+               
         <span class="c1"># Remove empty plots:</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nplots</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">)):</span>
-           <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>     
+           <span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">j</span><span class="p">])</span>     
         
         <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         
         <span class="k">if</span> <span class="n">return_fig</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">fig</span></div></div>
+                
+
+<div class="viewcode-block" id="add_lines"><a class="viewcode-back" href="../../platelib.html#platelib.plateread.add_lines">[docs]</a><span class="k">def</span> <span class="nf">add_lines</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">hori</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">vert</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Adds horizontal and figure lines to each plot in a subplot</span>
+<span class="sd">    </span>
+<span class="sd">    :param fig: matplotlib figure object</span>
+<span class="sd">    :param hori: Float, y position where the horizontal will be at </span>
+<span class="sd">    :param vert: Float, x position where the horizontal will be at   </span>
+<span class="sd">    &#39;&#39;&#39;</span>    
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>    
+        <span class="k">if</span> <span class="n">hori</span><span class="p">:</span>
+            <span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">hori</span><span class="p">,</span><span class="n">xmin</span><span class="o">=</span><span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="o">=</span><span class="n">xmax</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">vert</span><span class="p">:</span>
+            <span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">vert</span><span class="p">,</span><span class="n">ymin</span><span class="o">=</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="o">=</span><span class="n">ymax</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span></div>
+
+    
 </pre></div>
 
           </div>

@@ -44,7 +44,7 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
 	'sphinx.ext.autodoc',
-	'sphinx.ext.autosectionlabel'
+	'sphinx.ext.autosectionlabel',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

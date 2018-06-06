@@ -1,6 +1,10 @@
 \begin{sphinxtheindex}
 \def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
 
+  \bigletter A
+  \item add\_lines() (in module platelib.plateread), \hyperpage{10}
+
+  \indexspace
   \bigletter E
   \item exp\_rise() (in module platelib.fitfun), \hyperpage{9}
 
@@ -43,11 +47,11 @@
   \item read\_plate() (in module platelib.plateread), \hyperpage{10}
   \item read\_tecan() (in module platelib.plateread), \hyperpage{10}
   \item read\_transposed\_bmg() (in module platelib.plateread), \hyperpage{10}
-  \item read\_untransposed\_bmg() (in module platelib.plateread), \hyperpage{10}
+  \item read\_untransposed\_bmg() (in module platelib.plateread), \hyperpage{11}
 
   \indexspace
   \bigletter S
-  \item search\_start() (in module platelib.plateread), \hyperpage{10}
+  \item search\_start() (in module platelib.plateread), \hyperpage{11}
   \item sigmoid() (in module platelib.fitfun), \hyperpage{9}
   \item sigmoidal\_auto() (in module platelib.fitfun), \hyperpage{9}
 
