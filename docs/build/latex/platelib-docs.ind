@@ -14,21 +14,12 @@
   \item fit\_plate (class in platelib.fitfun), \hyperpage{9}
 
   \indexspace
-  \bigletter G
-  \item gauss() (in module platelib.fitfun), \hyperpage{9}
-  \item gauss\_dataset() (in module platelib.fitfun), \hyperpage{9}
-
-  \indexspace
   \bigletter L
   \item linear() (in module platelib.fitfun), \hyperpage{9}
 
   \indexspace
   \bigletter N
   \item named\_order() (in module platelib.plateread), \hyperpage{10}
-
-  \indexspace
-  \bigletter O
-  \item objective() (in module platelib.fitfun), \hyperpage{9}
 
   \indexspace
   \bigletter P
@@ -47,11 +38,11 @@
   \item read\_plate() (in module platelib.plateread), \hyperpage{10}
   \item read\_tecan() (in module platelib.plateread), \hyperpage{10}
   \item read\_transposed\_bmg() (in module platelib.plateread), \hyperpage{10}
-  \item read\_untransposed\_bmg() (in module platelib.plateread), \hyperpage{11}
+  \item read\_untransposed\_bmg() (in module platelib.plateread), \hyperpage{10}
 
   \indexspace
   \bigletter S
-  \item search\_start() (in module platelib.plateread), \hyperpage{11}
+  \item search\_start() (in module platelib.plateread), \hyperpage{10}
   \item sigmoid() (in module platelib.fitfun), \hyperpage{9}
   \item sigmoidal\_auto() (in module platelib.fitfun), \hyperpage{9}
 

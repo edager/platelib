@@ -1,1 +1,1 @@
-from plateread import *
+from .plateread import *

@@ -83,69 +83,6 @@
     
 <div class="viewcode-block" id="fit_plate"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.fit_plate">[docs]</a><span class="k">class</span> <span class="nc">fit_plate</span><span class="p">(</span><span class="n">Plate_data</span><span class="p">):</span>
     <span class="k">pass</span>  </div>
-
-<div class="viewcode-block" id="gauss"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.gauss">[docs]</a><span class="k">def</span> <span class="nf">gauss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">cen</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
-    <span class="s2">&quot;basic gaussian&quot;</span>
-    <span class="k">return</span> <span class="n">amp</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">cen</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="gauss_dataset"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.gauss_dataset">[docs]</a><span class="k">def</span> <span class="nf">gauss_dataset</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;calc gaussian from params for data set i</span>
-<span class="sd">    using simple, hardwired naming convention&quot;&quot;&quot;</span>
-    <span class="n">amp</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;amp_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span>
-    <span class="n">cen</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;cen_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span>
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sig_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span>
-    <span class="k">return</span> <span class="n">gauss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">cen</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="objective"><a class="viewcode-back" href="../../platelib.html#platelib.fitfun.objective">[docs]</a><span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; calculate total residual for fits to several data sets held</span>
-<span class="sd">    in a 2-D array, and modeled by Gaussian functions&quot;&quot;&quot;</span>
-    <span class="n">ndata</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
-    <span class="c1"># make residual per data set</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndata</span><span class="p">):</span>
-        <span class="n">resid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">gauss_dataset</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="c1"># now flatten this to a 1D array, as minimize() needs</span>
-    <span class="k">return</span> <span class="n">resid</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
-
-<span class="c1"># create 5 datasets</span>
-<span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">x  = np.linspace( -1, 2, 151)</span>
-<span class="sd">data = []</span>
-<span class="sd">for i in np.arange(5):</span>
-<span class="sd">    amp   =  0.60 + 9.50*np.random.rand()</span>
-<span class="sd">    cen   = -0.20 + 1.20*np.random.rand()</span>
-<span class="sd">    sig   =  0.25 + 0.03*np.random.rand()</span>
-<span class="sd">    dat   = gauss(x, amp, cen, sig) + np.random.normal(size=len(x), scale=0.1)</span>
-<span class="sd">    data.append(dat)</span>
-
-<span class="sd"># data has shape (5, 151)</span>
-<span class="sd">data = np.array(data)</span>
-<span class="sd">assert(data.shape) == (5, 151)</span>
-
-<span class="sd"># create 5 sets of parameters, one per data set</span>
-<span class="sd">fit_params = Parameters()</span>
-<span class="sd">for iy, y in enumerate(data):</span>
-<span class="sd">    fit_params.add( &#39;amp_%i&#39; % (iy+1), value=0.5, min=0.0,  max=200)</span>
-<span class="sd">    fit_params.add( &#39;cen_%i&#39; % (iy+1), value=0.4, min=-2.0,  max=2.0)</span>
-<span class="sd">    fit_params.add( &#39;sig_%i&#39; % (iy+1), value=0.3, min=0.01, max=3.0)</span>
-
-<span class="sd"># but now constrain all values of sigma to have the same value</span>
-<span class="sd"># by assigning sig_2, sig_3, .. sig_5 to be equal to sig_1</span>
-<span class="sd">for iy in (2, 3, 4, 5):</span>
-<span class="sd">    fit_params[&#39;sig_%i&#39; % iy].expr=&#39;sig_1&#39;</span>
-
-<span class="sd"># run the global fit to all the data sets</span>
-<span class="sd">result = minimize(objective, fit_params, args=(x, data))</span>
-<span class="sd">report_fit(result.params)</span>
-
-<span class="sd"># plot the data sets and fits</span>
-<span class="sd">plt.figure()</span>
-<span class="sd">for i in range(5):</span>
-<span class="sd">    y_fit = gauss_dataset(result.params, i, x)</span>
-<span class="sd">    plt.plot(x, data[i, :], &#39;o&#39;, x, y_fit, &#39;-&#39;)</span>
-
-<span class="sd">plt.show()</span>
-<span class="sd">&#39;&#39;&#39;</span>
 </pre></div>
 
           </div>
