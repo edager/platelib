@@ -8,21 +8,14 @@
 \PassOptionsToPackage{warn}{textcomp}
 \usepackage[utf8]{inputenc}
 \ifdefined\DeclareUnicodeCharacter
- \ifdefined\DeclareUnicodeCharacterAsOptional
-  \DeclareUnicodeCharacter{"00A0}{\nobreakspace}
-  \DeclareUnicodeCharacter{"2500}{\sphinxunichar{2500}}
-  \DeclareUnicodeCharacter{"2502}{\sphinxunichar{2502}}
-  \DeclareUnicodeCharacter{"2514}{\sphinxunichar{2514}}
-  \DeclareUnicodeCharacter{"251C}{\sphinxunichar{251C}}
-  \DeclareUnicodeCharacter{"2572}{\textbackslash}
- \else
-  \DeclareUnicodeCharacter{00A0}{\nobreakspace}
-  \DeclareUnicodeCharacter{2500}{\sphinxunichar{2500}}
-  \DeclareUnicodeCharacter{2502}{\sphinxunichar{2502}}
-  \DeclareUnicodeCharacter{2514}{\sphinxunichar{2514}}
-  \DeclareUnicodeCharacter{251C}{\sphinxunichar{251C}}
-  \DeclareUnicodeCharacter{2572}{\textbackslash}
- \fi
+% support both utf8 and utf8x syntaxes
+\edef\sphinxdqmaybe{\ifdefined\DeclareUnicodeCharacterAsOptional\string"\fi}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe00A0}{\nobreakspace}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe2500}{\sphinxunichar{2500}}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe2502}{\sphinxunichar{2502}}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe2514}{\sphinxunichar{2514}}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe251C}{\sphinxunichar{251C}}
+  \DeclareUnicodeCharacter{\sphinxdqmaybe2572}{\textbackslash}
 \fi
 \usepackage{cmap}
 \usepackage[T1]{fontenc}
@@ -32,6 +25,7 @@
 \usepackage[Bjarne]{fncychap}
 \usepackage{sphinx}
 
+\fvset{fontsize=\small}
 \usepackage{geometry}
 
 % Include hyperref last.
@@ -47,6 +41,9 @@
 
 \addto\captionsenglish{\renewcommand{\literalblockcontinuedname}{continued from previous page}}
 \addto\captionsenglish{\renewcommand{\literalblockcontinuesname}{continues on next page}}
+\addto\captionsenglish{\renewcommand{\sphinxnonalphabeticalgroupname}{Non-alphabetical}}
+\addto\captionsenglish{\renewcommand{\sphinxsymbolsname}{Symbols}}
+\addto\captionsenglish{\renewcommand{\sphinxnumbersname}{Numbers}}
 
 \addto\extrasenglish{\def\pageautorefname{page}}
 
@@ -55,23 +52,25 @@
 
 
 \title{platelib Documentation}
-\date{Jun 06, 2018}
+\date{May 10, 2019}
 \release{0.1.5-alpha}
 \author{Emil Dandanell Agerschou}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
 \makeindex
-
 \begin{document}
 
+\pagestyle{empty}
 \maketitle
+\pagestyle{plain}
 \sphinxtableofcontents
+\pagestyle{normal}
 \phantomsection\label{\detokenize{index::doc}}
 
 
 
 \chapter{Introduction}
-\label{\detokenize{introduction:introduction}}\label{\detokenize{introduction::doc}}\label{\detokenize{introduction:welcome-to-the-platelib-documentation}}
+\label{\detokenize{introduction:introduction}}\label{\detokenize{introduction::doc}}
 
 \section{Summary}
 \label{\detokenize{introduction:summary}}
@@ -112,7 +111,7 @@ or even better have a look at the source :)
 
 
 \section{Download}
-\label{\detokenize{install:download}}\label{\detokenize{install:git}}
+\label{\detokenize{install:download}}
 Either download the \sphinxhref{https://github.com/edager/platelib/tree/master/dist}{source distribution} directly or use:
 \begin{quote}
 
@@ -121,7 +120,7 @@ Either download the \sphinxhref{https://github.com/edager/platelib/tree/master/d
 
 
 \section{Install}
-\label{\detokenize{install:source-distribution}}\label{\detokenize{install:install}}
+\label{\detokenize{install:install}}
 Go to directory where the platelib source file is (\sphinxcode{\sphinxupquote{platelib/dist/}} if \sphinxcode{\sphinxupquote{git}} was used) and run the following in the terminal:
 
 \fvset{hllines={, ,}}%
@@ -178,13 +177,20 @@ Simply go to the terminal and run:
 
 
 \chapter{Cookbook}
-\label{\detokenize{cookbook:github}}\label{\detokenize{cookbook::doc}}\label{\detokenize{cookbook:cookbook}}
+\label{\detokenize{cookbook:cookbook}}\label{\detokenize{cookbook::doc}}
 
 \section{Reading in data}
 \label{\detokenize{cookbook:reading-in-data}}
 The main functionality of \sphinxcode{\sphinxupquote{platelib}} is the \sphinxcode{\sphinxupquote{read\_plate}} function
 that allows for reading in platereader data from kinetic experiments
-into a common framework namely into the \sphinxcode{\sphinxupquote{Plate\_data}} class.
+into a common framework namely into the \sphinxcode{\sphinxupquote{Plate\_data}} class. The
+following examples assumes for simplicity that \sphinxcode{\sphinxupquote{platelib}} has been
+imported using:
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{platelib} \PYG{k}{import} \PYG{o}{*}
+\end{sphinxVerbatim}
 
 If an equal number of replicates per sample were prepared
 this can be specified (default is \sphinxcode{\sphinxupquote{3}}):
@@ -326,286 +332,19 @@ specified whether all measurements should be plotted or not
 \label{\detokenize{modules:platelib}}\label{\detokenize{modules::doc}}
 
 \section{platelib package}
-\label{\detokenize{platelib::doc}}\label{\detokenize{platelib:platelib-package}}
+\label{\detokenize{platelib:platelib-package}}\label{\detokenize{platelib::doc}}
 
 \subsection{Submodules}
 \label{\detokenize{platelib:submodules}}
 
 \subsection{platelib.fitfun module}
-\label{\detokenize{platelib:module-platelib.fitfun}}\label{\detokenize{platelib:platelib-fitfun-module}}\index{platelib.fitfun (module)}\index{exp\_rise() (in module platelib.fitfun)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.exp_rise}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{exp\_rise}}}{\emph{t}, \emph{a}, \emph{b}, \emph{k}}{}
-\end{fulllineitems}
-
-\index{fit\_fun() (in module platelib.fitfun)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.fit_fun}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{fit\_fun}}}{\emph{func, df, bounds=({[}0, 0, 0, 0{]}, {[}1, 50, 10, 65{]})}}{}
-\end{fulllineitems}
-
-\index{fit\_plate (class in platelib.fitfun)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.fit_plate}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{fit\_plate}}}{\emph{data}, \emph{replicates}, \emph{multi\_chrom}}{}
-Bases: {\hyperref[\detokenize{platelib:platelib.plateread.Plate_data}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{platelib.plateread.Plate\_data}}}}}
-
-\end{fulllineitems}
-
-\index{linear() (in module platelib.fitfun)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.linear}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{linear}}}{\emph{t}, \emph{a}, \emph{b}}{}
-\end{fulllineitems}
-
-\index{quadratic() (in module platelib.fitfun)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.quadratic}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{quadratic}}}{\emph{t}, \emph{a}, \emph{b}, \emph{c}}{}
-\end{fulllineitems}
-
-\index{sigmoid() (in module platelib.fitfun)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.sigmoid}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{sigmoid}}}{\emph{x}, \emph{y0}, \emph{L}, \emph{k}, \emph{x\_half}}{}
-\end{fulllineitems}
-
-\index{sigmoidal\_auto() (in module platelib.fitfun)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.fitfun.sigmoidal_auto}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.fitfun.}}\sphinxbfcode{\sphinxupquote{sigmoidal\_auto}}}{\emph{t}, \emph{a}, \emph{b}, \emph{k}}{}
-\end{fulllineitems}
-
-
+\label{\detokenize{platelib:platelib-fitfun-module}}
 
 \subsection{platelib.plateread module}
-\label{\detokenize{platelib:platelib-plateread-module}}\label{\detokenize{platelib:module-platelib.plateread}}\index{platelib.plateread (module)}\index{Plate\_data (class in platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{Plate\_data}}}{\emph{data}, \emph{replicates}, \emph{multi\_chrom}}{}
-Class for containing data from a platereader assay.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{data}} \textendash{} Pandas DataFrame with time points as index and wells as columns
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{replicates}} \textendash{} Positive integer of replicates, assuming equal number of replicates of all samples
-
-\end{itemize}
-
-\end{description}\end{quote}
-\index{plot() (platelib.plateread.Plate\_data method)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot}}}{\emph{titles=None}, \emph{sharey=True}, \emph{plot\_multi=True}, \emph{return\_fig=False}}{}
-Plots the number of samples i.e. replicates/wells in the data set.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{titles}} \textendash{} List-like object of subtitles
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{sharey}} \textendash{} Bool, if True all y-axis limits will be identical, if False y-axis limits are given by matplotlib defaults.
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{plot\_multi}} \textendash{} Bool, if several different measurements are present per time point, only plot the first one, if False plots all of the values.
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{return\_fig}} \textendash{} Bool, if True returns a figure object, if False only plot the data
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{to\_a\_csv() (platelib.plateread.Plate\_data method)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.to_a_csv}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{to\_a\_csv}}}{\emph{path}, \emph{one\_per\_multi\_c=False}}{}
-Returns the data as a pandas dataframe with times as indexes
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{path}} \textendash{} String of path to store output
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{one\_per\_multi\_c}} \textendash{} Bool, if ‘True’ one measurement per dataframe will be exported otherwise all will be exported in one file.
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{to\_a\_dataframe() (platelib.plateread.Plate\_data method)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.Plate_data.to_a_dataframe}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{to\_a\_dataframe}}}{\emph{one\_per\_multi\_c=False}}{}
-Returns the data as a list of pandas dataframe(s) with times as indexes
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{one\_per\_multi\_c}} \textendash{} Bool, if ‘True’ one measurement per dataframe will be exported, if False all will be exported in one dataframe.
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
-\end{fulllineitems}
-
-\index{add\_lines() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.add_lines}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{add\_lines}}}{\emph{fig}, \emph{hori=False}, \emph{vert=False}}{}
-Adds horizontal and figure lines to each plot in a subplot
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{fig}} \textendash{} matplotlib figure object
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{hori}} \textendash{} Float, y position where the horizontal will be at
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{vert}} \textendash{} Float, x position where the horizontal will be at
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{named\_order() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.named_order}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{named\_order}}}{\emph{named\_samples}, \emph{df}}{}
-Reorder dataframe columns according to the specified order, returns dataframe and list of replicates.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{named\_samples}} \textendash{} List of lists, one list per samples containing all replicates
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{df}} \textendash{} Pandas DataFrame
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{read\_plate() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.read_plate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{read\_plate}}}{\emph{filename}, \emph{replicates=3}, \emph{rep\_direction='hori'}, \emph{time\_unit='hours'}, \emph{named\_samples={[}{]}}, \emph{platereader='bmg'}, \emph{transposed=True}}{}
-Reads in data from a CSV file from a BMG or Tecan platereader and returns a platedata object.
-
-:param filename:String, path to filename
-:param replicates: Positive integer, The number of replicates per sample.
-:param rep\_direction: String, directions replicates is in. Only ‘hori’ and ‘vert’ are accepted directions where ‘hori’ if replicates are going from left to rigth ‘vert’ from replicates going from top to bottom. 
-:param time\_unit: String, time unit one would like to have, accepted values are: ‘seconds’,’minutes’,’hours’,’days’  
-:param named\_samples: List of lists,  where each list should correpond to a sample and contain all replicates of it 
-:param platereader: String, The plate reader used to collect the data. Only ‘bmg’ and ‘tecan’ are accepted platereaders
-:param transposed: Bool, specifies wether the wells are in column (True) or row format (False).
-
-\end{fulllineitems}
-
-\index{read\_tecan() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.read_tecan}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{read\_tecan}}}{\emph{filename}}{}
-Reads in untransposed data from a tecan platereader and returns a pandas DataFrame object.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} String, path to filename
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{read\_transposed\_bmg() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.read_transposed_bmg}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{read\_transposed\_bmg}}}{\emph{filename}}{}
-Reads in transposed data from a BMG platereader and returns a pandas DataFrame object.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} String, path to filename.
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{read\_untransposed\_bmg() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.read_untransposed_bmg}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{read\_untransposed\_bmg}}}{\emph{filename}}{}
-Reads in untransposed data from a BMG platereader and returns a pandas DataFrame object.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} String, path to filename.
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{search\_start() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.search_start}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{search\_start}}}{\emph{filename}}{}
-Find start of data region and returns the line number by finding the line that starts with “Well”.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{filename}} \textendash{} String, path to filename.
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{to\_time\_units() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.to_time_units}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{to\_time\_units}}}{\emph{df}, \emph{time\_unit}}{}
-Convert the index a dataframe into the time unit specified, returns dataframe.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{df}} \textendash{} Pandas DataFrame
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{time\_unit}} \textendash{} String, allowed values are ‘seconds’ ,’minutes’,’hours’, and ‘days’.
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-\index{vert\_order() (in module platelib.plateread)}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{platelib:platelib.plateread.vert_order}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{platelib.plateread.}}\sphinxbfcode{\sphinxupquote{vert\_order}}}{\emph{replicates}, \emph{df}}{}
-Reorder dataframe column to vertical order, returns dataframe.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{replicates}} \textendash{} List of positive integer number of replicates.
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{df}} \textendash{} Pandas DataFrame
-
-\end{itemize}
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
-
+\label{\detokenize{platelib:platelib-plateread-module}}
 
 \subsection{Module contents}
-\label{\detokenize{platelib:module-contents}}\label{\detokenize{platelib:module-platelib}}\index{platelib (module)}
+\label{\detokenize{platelib:module-contents}}
 
 \chapter{Contribute}
 \label{\detokenize{contribute:contribute}}\label{\detokenize{contribute::doc}}
@@ -630,7 +369,7 @@ Unix-like system
 
 
 \section{Building}
-\label{\detokenize{contribute:building}}\label{\detokenize{contribute:git}}
+\label{\detokenize{contribute:building}}
 You have made some wicked cool changes to the source code
 or the documentation that you want to share with the world, awesome!
 
@@ -649,7 +388,7 @@ The version number has to be changed in the two files \sphinxcode{\sphinxupquote
 
 
 \subsection{Create new source distribution}
-\label{\detokenize{contribute:semantic-versioning}}\label{\detokenize{contribute:create-new-source-distribution}}
+\label{\detokenize{contribute:create-new-source-distribution}}
 Go to the docs folder and run:
 
 \fvset{hllines={, ,}}%
@@ -704,14 +443,6 @@ PyPI availability
 \end{itemize}
 
 
-\renewcommand{\indexname}{Python Module Index}
-\begin{sphinxtheindex}
-\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
-\bigletter{p}
-\item {\sphinxstyleindexentry{platelib}}\sphinxstyleindexpageref{platelib:\detokenize{module-platelib}}
-\item {\sphinxstyleindexentry{platelib.fitfun}}\sphinxstyleindexpageref{platelib:\detokenize{module-platelib.fitfun}}
-\item {\sphinxstyleindexentry{platelib.plateread}}\sphinxstyleindexpageref{platelib:\detokenize{module-platelib.plateread}}
-\end{sphinxtheindex}
 
 \renewcommand{\indexname}{Index}
 \printindex

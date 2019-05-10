@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 from string import ascii_uppercase as A_up
 from xlrd import open_workbook
  
+NAS = ['Inj.','n.a.']
+
+
 # TODO:
 # 1. Extract metadata/header from data files
 # 2. Clean this function by turning the time conversion and reordering into seperate functions    
@@ -19,9 +22,9 @@ def read_plate(filename,replicates=3,rep_direction='hori',time_unit='hours',name
     :param time_unit: String, time unit one would like to have, accepted values are: 'seconds','minutes','hours','days'  
     :param named_samples: List of lists,  where each list should correpond to a sample and contain all replicates of it 
     :param platereader: String, The plate reader used to collect the data. Only 'bmg' and 'tecan' are accepted platereaders
-    :param transposed: Bool, specifies wether the wells are in column (True) or row format (False).   
+    :param transposed: Bool, specifies wether the wells are in column (True) or row format (False).  
     '''
-    if filename.lower().endswith(('.xls','.xlsx','.csv')) != True:
+    if filename.lower().endswith(('.xls','.xlsx','.csv','.txt')) != True:
         raise ValueError('"{}" is not a supported filetype, only ".xls",".xlsx", and ".csv" are'.format(filename))
 
     if rep_direction not in ('vert','hori'):
@@ -92,12 +95,16 @@ def read_transposed_bmg(filename):
     
     if filename.lower().endswith(('.xls','.xlsx')):    
         df = pd.read_excel(filename,
+                          na_values=NAS, 
                           index_col = 1,
                           skiprows=skiprows)
     else:
         df = pd.read_table(filename,
-                          sep=None, index_col = 1,
-                          skiprows=skiprows,engine='python')
+                          sep=None,
+                          na_values=NAS,  
+                          index_col = 1,
+                          skiprows=skiprows,
+                          engine='python')
         
     df.drop('Well', axis=1, inplace=True)
     return df 
@@ -111,16 +118,21 @@ def read_untransposed_bmg(filename):
     '''   
     skiprows = list(range(search_start(filename)))
     if filename.lower().endswith(('.xls','.xlsx')):
-        df = pd.read_excel(filename,skiprows=skiprows)
+        df = pd.read_excel(filename,
+                           na_values=NAS, 
+                           skiprows=skiprows)
     else:
-        df = pd.read_table(filename,sep=None,skiprows=skiprows,engine='python')
+        df = pd.read_table(filename,
+                           sep=None,
+                           na_values=['Inj.','n.a.'],
+                           skiprows=skiprows,
+                           engine='python')
      
     df.drop(df.columns[1],axis=1,inplace=True)
     df = df.transpose()
     df.columns = df.iloc[0,:]
     df.drop(df.index[0],axis=0,inplace=True)
-    df = df.astype(np.int)
-    df.index = df.index.astype(np.int)
+    df.index = df.index.astype(float)
     return df
 
 
@@ -212,12 +224,15 @@ class Plate_data():
             return self.data.iloc[:, key.start:key.stop:key.step]
         elif isinstance(key, int):
             return self.data.iloc[:, key]
+        elif isinstance(key, int):
+            if sum([isinstance(i, int) for i in key]) == len(key):
+                return self.data.iloc[:, key]
         
         # Access self.data by name of column
         elif isinstance(key, str):
             return self.data.loc[:, key]
         elif isinstance(key, list):
-            if sum([isinstance(i, str) for i in key]) == len(key):
+            if sum([isinstance(s, str) for s in key]) == len(key):
                 return self.data.loc[:, key]
                                      
         else:

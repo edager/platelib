@@ -75,7 +75,10 @@ Reading in data
 
 The main functionality of `platelib` is the `read_plate` function that
 allows for reading in platereader data from kinetic experiments into a
-common framework namely into the `Plate_data` class.
+common framework namely into the `Plate_data` class. The following
+examples assumes for simplicity that `platelib` has been imported using:
+
+    from platelib import *
 
 If an equal number of replicates per sample were prepared this can be
 specified (default is `3`):
